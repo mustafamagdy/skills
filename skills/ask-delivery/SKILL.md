@@ -1,6 +1,6 @@
 ---
 name: ask-delivery
-description: Router over the delivery-planning skills: which one to reach for, in what order, and where the handoffs are.
+description: "Router over the delivery-planning skills: which one to reach for, in what order, and where the handoffs are."
 disable-model-invocation: true
 ---
 
