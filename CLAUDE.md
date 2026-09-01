@@ -16,4 +16,6 @@ Every skill in `skills/` appears in the top-level `README.md`, linked to its `SK
 
 **No em-dashes anywhere in this repo's prose.** Where a sentence reaches for one, rewrite it with a comma, colon, period, parentheses, or a conjunction, whichever the sentence actually wants. Never do a blind character substitution.
 
-Run `scripts/link-skills.sh` after adding, removing or renaming a skill.
+Distribution is [skills.sh](https://skills.sh), which discovers `skills/<name>/SKILL.md` by walking the `skills/` directory. That flat layout is load-bearing: adding a bucket level still resolves, but a skill placed anywhere outside `skills/` is invisible without `--full-depth`. There is no manifest to maintain, so a new skill is published by committing it.
+
+`name` and `description` are the two frontmatter fields the installer requires. A skill missing either is skipped silently at install time, which looks exactly like it was never added.

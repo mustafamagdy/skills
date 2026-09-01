@@ -47,10 +47,21 @@ Where a tracker lacks a capability, the contract's degradation table fixes the f
 ## Install
 
 ```bash
-scripts/link-skills.sh
+npx skills@latest add mustafamagdy/skills -g
 ```
 
-Symlinks each skill into `~/.agents/skills` and `~/.claude/skills`, so a `git pull` keeps them current. Re-run after adding or renaming a skill.
+Pick the skills you want and which agents to install them on. `-g` installs to your user directory rather than the current project, which is what you want here: these skills plan the work in a repo, so they should be available before that repo exists.
+
+**Take `setup-delivery`.** Every other skill reads the two files it writes, and without it they stop and ask you to run it.
+
+One skill on its own, and updates:
+
+```bash
+npx skills@latest add mustafamagdy/skills --skill ask-delivery -g
+npx skills@latest update ask-delivery
+```
+
+Installed by default as symlinks to a single canonical copy, so `npx skills update` refreshes every agent at once. Works with [Claude Code, Codex, Cursor, OpenCode and 70-odd others](https://skills.sh/mustafamagdy/skills).
 
 ## Conventions
 
