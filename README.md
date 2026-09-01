@@ -2,6 +2,8 @@
 
 Agent skills that carry a signed requirements document all the way to a sprint a team can start on Monday.
 
+Built as an extension to [Matt Pocock's skills](https://github.com/mattpocock/skills), and shaped to sit beside them rather than overlap. His cover the loop from an issue to merged code; these cover the loop from a contract to a committed sprint. See [where this fits](#where-this-fits).
+
 They run as a **chain**. Each leaves an artifact the next one reads, so a step skipped is a step the next one guesses at.
 
 ```
@@ -63,6 +65,25 @@ npx skills@latest update ask-delivery
 
 Interactively the installer offers symlinks to one canonical copy; non-interactively (`-y`) it copies. Either way `npx skills update` is what refreshes them. Works with [Claude Code, Codex, Cursor, OpenCode and 70-odd others](https://skills.sh/mustafamagdy/skills).
 
+## Where this fits
+
+These are an extension to **[mattpocock/skills](https://github.com/mattpocock/skills)**. Install both: nothing here duplicates anything there.
+
+His set is the **engineering loop**, and it starts once work is already an issue: `/triage` sorts the queue, `/to-spec` turns a conversation into a spec, `/to-tickets` cuts a spec into tracer bullets, `/implement` builds one. It assumes somebody already decided what the work is.
+
+This set is the **delivery loop** upstream of that decision, which is where agency and consultancy work actually starts: a signed BRD, an SOW, three hundred requirements, a client who wants dates. Documents into a traceable register, the register into a backlog, the backlog into a dependency graph, the graph into a critical path and a sprint somebody can commit to in front of a client.
+
+The two meet at a story:
+
+| Boundary | Which skill |
+|---|---|
+| Requirements still fuzzy in someone's head | `/grill-with-docs` first. `/ingest-requirements` reads documents, it does not interview. |
+| Slicing one feature an agent is about to build | `/to-tickets`. Tracer bullets sized for a context window. |
+| Slicing a contracted scope a client is about to sign off | `/groom-stories`. Stories a human team estimates and commits to. |
+| A sprint is committed and the work starts | `/implement`, one story at a time. |
+
+`/ask-delivery` is the router over this set, and it carries the same boundaries so you do not have to hold them in your head.
+
 ## Conventions
 
-House style is in [CLAUDE.md](CLAUDE.md). Vocabulary is in [CONTEXT.md](CONTEXT.md). The writing style follows [`writing-for-agents`](https://github.com/mattpocock/skills/blob/main/skills/productivity/writing-for-agents/SKILL.md).
+House style is in [CLAUDE.md](CLAUDE.md). Vocabulary is in [CONTEXT.md](CONTEXT.md). The writing style follows [`writing-for-agents`](https://github.com/mattpocock/skills/blob/main/skills/productivity/writing-for-agents/SKILL.md), and the shape of a skill here (explore, recommend, confirm the decisions, then write) is lifted from the same repo.
