@@ -13,6 +13,8 @@ Run once per repo. Writes the two files every other delivery skill reads:
 
 Explore, present what you found, confirm, then write. This is a conversation, not a script.
 
+Everything you print is a decision the user has to make or approve. The two documents land on disk, never in the transcript: a template pasted back is a hundred lines the user has to scroll past to reach the one question you actually needed answered.
+
 ## Process
 
 ### 1. Explore
@@ -47,7 +49,20 @@ For anything else, work through `CAPABILITIES.md` operation by operation with th
 
 ### 3. Confirm
 
-Show both files in full and let the user edit before you write. They will be read by every later skill and by other humans, so a wrong line here is a wrong line in three hundred work items.
+Confirm the **decisions**, not the documents. One table, one line per decision, and the evidence behind each answer so the user can see which ones you inferred and which ones they told you. Filled in for one repo, it reads like this:
+
+| Decision | Answer | From |
+|---|---|---|
+| Tracker | Azure DevOps Boards, `match-best` / `mbg-rayyan-core` | `git remote` and the existing board |
+| Hierarchy | Epic, Feature, User Story | 40 existing items |
+| Codes | `E`, `F`, `S`, existing `UIP-*` kept as legacy | conventions default |
+| Requirement IDs | inherit `BR-*`, `RULE-*`, `PER-*`, `OPEN-*` | the source documents |
+| Estimates | Fibonacci to 8 | conventions default |
+| Degradations | none, the tracker answers every operation | the capability contract |
+
+Under it, a short **Worth knowing** list: only the things that will bite, one line each. A wrong default project on the machine belongs here. The rest of the tracker doc does not.
+
+Do not paste either file, or any part of one, into the transcript. They run to a couple of hundred lines between them, the user cannot review that in a scrollback, and step 4 is about to put both on disk where `git diff` can show them properly. Ask for corrections to the table, then write.
 
 ### 4. Write
 
@@ -71,7 +86,8 @@ A contract nobody exercised is a guess. Round-trip one throwaway item through th
 4. `block` it on itself if the tracker allows, or on any other item, and read the edge back.
 5. Delete or close it.
 
-Report what the round trip proved. Where an operation behaved differently from what the template claimed, **fix the tracker doc, not the report**.
+Report the round trip as one line per operation: the operation, pass or fail, and the surprise if there was one. No request bodies, no API responses, no item dump. Where an operation behaved differently from what the template claimed, **fix the tracker doc, not the report**.
+
 
 ## Done when
 
@@ -80,7 +96,10 @@ Report what the round trip proved. Where an operation behaved differently from w
 - Every degradation the tracker forces is written down with its fallback.
 - `CLAUDE.md` or `AGENTS.md` points at both files.
 - The verification item is gone.
+- Nothing longer than the decision table reached the transcript. Both documents were reviewed on disk.
 
 ## Hand off
 
-Tell the user: **`/ingest-requirements`** next, with the paths to the source documents.
+Both files are written. Close with the two paths and one line: read them there, correct them in place, no need to re-run this skill for an edit.
+
+Then tell the user: **`/ingest-requirements`** next, with the paths to the source documents.

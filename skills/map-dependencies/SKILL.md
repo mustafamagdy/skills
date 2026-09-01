@@ -62,13 +62,15 @@ A cycle left in place makes the frontier empty, and every planning skill downstr
 
 ### 5. Report before writing
 
-Present:
+Present, in around twenty lines. Counts carry the shape of the graph; names are for the handful of items the user has to think about:
 
-- The edge count and the **longest chain** through the graph, by story count and by points. That chain is the floor on the schedule, and it is the number the user most needs to see before it becomes a date.
-- Stories with high **fan-in**: everything is waiting on them. These are the schedule risks.
-- Stories with **no edges at all**, which are either genuinely independent (good, and they are the parallel work) or under-analysed.
-- Every external dependency, with its owner.
+- The edge count and the **longest chain** through the graph, by story count and by points. That chain is the floor on the schedule, and it is the number the user most needs to see before it becomes a date. Name its two ends and the Epics it crosses rather than listing every story on it.
+- The five highest **fan-in** stories, with their counts. Everything is waiting on these, so they are the schedule risks.
+- The count of stories with **no edges at all**, then up to five you are least sure about. The rest are either genuinely independent (good, and they are the parallel work) or under-analysed, and the full list belongs in the graph rather than the transcript.
+- Every external dependency, with its owner. This list is never long, and each entry is somebody's action.
 - Any cycle you had to break, and how.
+
+The edges themselves are not part of the report. Three hundred `A blocks B` lines say nothing that the five bullets above do not say better.
 
 ### 6. Write the edges
 

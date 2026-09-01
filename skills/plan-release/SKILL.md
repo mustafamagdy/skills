@@ -28,7 +28,7 @@ Where sprints have already run, use **actual** velocity. Not the one the team ho
 
 ### 2. Compute the critical path
 
-Longest chain by points through the graph. Report it as a list of stories, with its total.
+Longest chain by points through the graph. Report its total, its length in stories, and the Epics it runs through. List the chain story by story only where it is short enough to read, around fifteen; past that the full chain belongs in the plan document, and what the user needs here is the number.
 
 Then read what it means:
 
@@ -80,7 +80,7 @@ Name which requirements would move under the scope lever, by ID, with the fact t
 
 ### 7. Write the plan
 
-Write `docs/delivery/release-plan.md`.
+Write `docs/delivery/release-plan.md`, then say four things and stop: the end date, the critical path length, whether the plan closes against the committed dates, and the decision you need if it does not. The plan is long and it is on disk. What the user has to act on is those four lines.
 
 <plan-template>
 

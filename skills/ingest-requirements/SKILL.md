@@ -62,6 +62,8 @@ Write `docs/delivery/requirements.md` using the template below.
 
 Present, in this order: the count by type and phase, the contradictions, then the open questions ranked by what they block. Ask them to confirm the MoSCoW and phase columns, which are the two you guessed at most.
 
+That is the whole report. The register itself stays on disk: a three-hundred-row table pasted into the terminal buries the handful of lines the user has to answer.
+
 Do not proceed to the backlog until the contradictions are resolved. An unresolved contradiction becomes two stories that undo each other.
 
 <register-template>

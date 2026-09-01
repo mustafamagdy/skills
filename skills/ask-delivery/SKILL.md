@@ -29,14 +29,14 @@ requirements docs
 
 | Step | Reach for it when | It leaves behind |
 |---|---|---|
-| [`/setup-delivery`](../setup-delivery/SKILL.md) | First run in a repo, or the tracker changed | `docs/agents/delivery-tracker.md`, `docs/agents/backlog-conventions.md` |
-| [`/ingest-requirements`](../ingest-requirements/SKILL.md) | You have a BRD, SOW, RFP or spec and no backlog | `docs/delivery/requirements.md`, the **register** |
-| [`/shape-backlog`](../shape-backlog/SKILL.md) | The register is agreed and nothing is on the tracker yet | Epics and Features on the tracker, `docs/delivery/backlog-map.md` |
-| [`/groom-stories`](../groom-stories/SKILL.md) | Features exist, stories don't, or a feature holds one story that echoes it | User Stories on the tracker, estimated |
-| [`/map-dependencies`](../map-dependencies/SKILL.md) | The story set is complete and you need to know what gates what | Blocking edges on the tracker |
-| [`/plan-release`](../plan-release/SKILL.md) | Edges are set and you need dates, sprints and a critical path | `docs/delivery/release-plan.md` |
-| [`/plan-sprint`](../plan-sprint/SKILL.md) | A sprint is about to start | Items assigned to the iteration, `docs/delivery/sprints/<n>.md` |
-| [`/backlog-audit`](../backlog-audit/SKILL.md) | Any time you distrust the board | A findings report, nothing written |
+| `/setup-delivery` | First run in a repo, or the tracker changed | `docs/agents/delivery-tracker.md`, `docs/agents/backlog-conventions.md` |
+| `/ingest-requirements` | You have a BRD, SOW, RFP or spec and no backlog | `docs/delivery/requirements.md`, the **register** |
+| `/shape-backlog` | The register is agreed and nothing is on the tracker yet | Epics and Features on the tracker, `docs/delivery/backlog-map.md` |
+| `/groom-stories` | Features exist, stories don't, or a feature holds one story that echoes it | User Stories on the tracker, estimated |
+| `/map-dependencies` | The story set is complete and you need to know what gates what | Blocking edges on the tracker |
+| `/plan-release` | Edges are set and you need dates, sprints and a critical path | `docs/delivery/release-plan.md` |
+| `/plan-sprint` | A sprint is about to start | Items assigned to the iteration, `docs/delivery/sprints/<n>.md` |
+| `/backlog-audit` | Any time you distrust the board | A findings report, nothing written |
 
 ## Two ways in
 

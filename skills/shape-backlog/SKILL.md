@@ -72,6 +72,8 @@ Where the tracker needs labels to exist before they are applied, create the dime
 
 Leave every item in the backlog. Scheduling is `/plan-release`'s job, and doing it here is guessing before the estimates exist.
 
+Report the publish as counts per level, then only what failed or needed a decision. The board and the map in step 7 are the record; listing every item back is a copy of a copy.
+
 ### 7. Write the map
 
 Write `docs/delivery/backlog-map.md`: the spine as a tree, each row carrying its hierarchy code, its tracker identifier, and the requirement IDs it covers. This is what `/groom-stories` reads to find its work, and what lets a later session resolve a code to an identifier without re-querying the whole board.

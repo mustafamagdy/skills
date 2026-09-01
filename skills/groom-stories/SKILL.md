@@ -65,7 +65,9 @@ An estimate above 8 sends the story back to step 2. Do not record it and move on
 
 ### 6. Quiz the user
 
-Per Feature, present the slices as a numbered list: title, what it delivers, points, and which requirement IDs it carries. Flag separately the slices the unhappy-path sweep produced that are not in the register. Ask whether the granularity is right and whether anything should merge or split.
+Per Feature, present the slices as a numbered list: title, one line on what it delivers, points, and which requirement IDs it carries. One line per story, never the bodies. The five sections and the acceptance criteria are what step 7 publishes, and a user approving granularity is deciding on the cuts, not proofreading forty paragraphs.
+
+Flag separately the slices the unhappy-path sweep produced that are not in the register. Ask whether the granularity is right and whether anything should merge or split.
 
 Iterate until approved.
 
@@ -82,6 +84,8 @@ Leave stories in the backlog. Scheduling belongs to `/plan-release` and `/plan-s
 ### 8. Update the map
 
 Append each published story to `docs/delivery/backlog-map.md`: code, identifier, points, requirement IDs.
+
+Then report: how many stories per Feature, the total points, and the specific stories that need the user (a contract gap from the sweep, an estimate over 8 you could not split, a publish that failed). Not the stories themselves. They are on the board and in the map.
 
 ## Done when
 

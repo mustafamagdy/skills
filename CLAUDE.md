@@ -19,3 +19,13 @@ Every skill in `skills/` appears in the top-level `README.md`, linked to its `SK
 Distribution is [skills.sh](https://skills.sh), which discovers `skills/<name>/SKILL.md` by walking the `skills/` directory. That flat layout is load-bearing: adding a bucket level still resolves, but a skill placed anywhere outside `skills/` is invisible without `--full-depth`. There is no manifest to maintain, so a new skill is published by committing it.
 
 `name` and `description` are the two frontmatter fields the installer requires. A skill missing either is skipped silently at install time, which looks exactly like it was never added.
+
+## What a skill prints
+
+A skill's terminal output is a summary of decisions. It is never a copy of what the skill wrote. The file is on disk and the tracker is a click away, so pasting either back into the transcript costs the user a page of scrolling and tells them nothing the source would not.
+
+So no skill instructs the agent to print a document body, a template it has just filled in, or a work item it has just created. Where the user has to approve something before it is written, the approval step states the **decisions**, one line each, in a table or a short list, and names the file about to be written. Where a step reports results, it reports counts first, then the specific items that need attention, capped, with the remainder as a number.
+
+Review of a written file happens against the file, not against a transcript echo of it. It is easier to read there, and `git diff` is a better review surface than scrollback.
+
+The test for any instruction that produces output: **could the user act on it without scrolling?** If not, it is a document, and a document belongs in a file.

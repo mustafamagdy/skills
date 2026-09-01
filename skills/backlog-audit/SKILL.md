@@ -13,7 +13,7 @@ Read `docs/delivery/requirements.md`, `docs/agents/backlog-conventions.md` and `
 
 ## The checks
 
-Run all six. Report counts, then the specific items, capped at the ten worst per check with the remainder as a count.
+Run all six. They are what you look for, not what you print: findings from every check land in the one severity-grouped report at the end, each item named once. Carry a count for every check and at most the ten worst items from each, with the remainder as a number.
 
 ### Traceability
 
@@ -58,7 +58,7 @@ Run all six. Report counts, then the specific items, capped at the ten worst per
 
 ## Report
 
-Group by severity, not by check. What blocks delivery outranks what is untidy:
+One report, grouped by severity rather than by check, because what blocks delivery outranks what is untidy. Lead with a line per check: its name, its count, and `clean` where it is clean. Then the items:
 
 1. **Blocking**: cycles, schedule violations, `Must` orphans, unready stories in the current sprint.
 2. **Risk**: thin coverage, over-linked chains, external dependencies running late, milestones without full carrying sets.
@@ -78,6 +78,7 @@ Close with **where to rejoin the chain**, one line, because the finding list is 
 ## Done when
 
 - All six checks ran, including the ones that came back clean, and the clean ones are named as clean.
-- Findings are grouped by severity with specific items, not counts alone.
+- Findings are grouped by severity with specific items, not counts alone, and no item is reported twice.
+- Every check contributed a count line, including the clean ones.
 - The rejoin line is stated.
 - Nothing on the board or on disk changed.
