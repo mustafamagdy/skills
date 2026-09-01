@@ -1,0 +1,5 @@
+interface:
+  display_name: "Map Dependencies"
+  short_description: "Set blocking edges across a groomed story set"
+policy:
+  allow_implicit_invocation: false

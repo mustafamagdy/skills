@@ -1,0 +1,5 @@
+interface:
+  display_name: "Shape Backlog"
+  short_description: "Turn the register into an epic and feature spine on the tracker"
+policy:
+  allow_implicit_invocation: false

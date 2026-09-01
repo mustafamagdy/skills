@@ -1,0 +1,5 @@
+interface:
+  display_name: "Plan Sprint"
+  short_description: "Close the last sprint and commit the next"
+policy:
+  allow_implicit_invocation: false

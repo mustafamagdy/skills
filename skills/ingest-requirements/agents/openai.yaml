@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ingest Requirements"
+  short_description: "Turn source documents into a traceable requirement register"
+policy:
+  allow_implicit_invocation: false

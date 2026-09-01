@@ -1,0 +1,5 @@
+interface:
+  display_name: "Setup Delivery"
+  short_description: "Configure the tracker and backlog conventions for the delivery chain"
+policy:
+  allow_implicit_invocation: false

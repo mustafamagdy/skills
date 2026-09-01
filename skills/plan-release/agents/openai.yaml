@@ -1,0 +1,5 @@
+interface:
+  display_name: "Plan Release"
+  short_description: "Compute the critical path, sprint cadence and milestone dates"
+policy:
+  allow_implicit_invocation: false

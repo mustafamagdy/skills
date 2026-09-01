@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ask Delivery"
+  short_description: "Router over the delivery-planning skills"
+policy:
+  allow_implicit_invocation: false

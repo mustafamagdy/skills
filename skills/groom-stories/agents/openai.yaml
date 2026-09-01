@@ -1,0 +1,5 @@
+interface:
+  display_name: "Groom Stories"
+  short_description: "Cut features into demoable, estimated story slices"
+policy:
+  allow_implicit_invocation: false
