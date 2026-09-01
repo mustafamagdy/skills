@@ -61,7 +61,7 @@ npx skills@latest add mustafamagdy/skills --skill ask-delivery -g
 npx skills@latest update ask-delivery
 ```
 
-Installed by default as symlinks to a single canonical copy, so `npx skills update` refreshes every agent at once. Works with [Claude Code, Codex, Cursor, OpenCode and 70-odd others](https://skills.sh/mustafamagdy/skills).
+Interactively the installer offers symlinks to one canonical copy; non-interactively (`-y`) it copies. Either way `npx skills update` is what refreshes them. Works with [Claude Code, Codex, Cursor, OpenCode and 70-odd others](https://skills.sh/mustafamagdy/skills).
 
 ## Conventions
 
