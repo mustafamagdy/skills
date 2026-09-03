@@ -73,6 +73,51 @@
       ]
     }
   ],
+  "schedule": {
+    "title": "Example project delivery schedule",
+    "subtitle": "Four two-week sprints | Status as at 3 September 2026",
+    "statusDate": "2026-09-03",
+    "statusPeriod": 2,
+    "periods": [
+      {"label": "W1", "date": "24 Aug"},
+      {"label": "W2", "date": "31 Aug"},
+      {"label": "W3", "date": "7 Sep"},
+      {"label": "W4", "date": "14 Sep"},
+      {"label": "W5", "date": "21 Sep"},
+      {"label": "W6", "date": "28 Sep"},
+      {"label": "W7", "date": "5 Oct"},
+      {"label": "W8", "date": "12 Oct"}
+    ],
+    "phases": [
+      {"label": "P1 Foundations", "start": 1, "end": 2, "color": "#6C97BF"},
+      {"label": "P2 Core workflow", "start": 3, "end": 4, "color": "#315578"},
+      {"label": "P3 Release", "start": 5, "end": 8, "color": "#9E7A16"}
+    ],
+    "milestones": [
+      {"id": "M1", "label": "Foundation ready", "period": 2},
+      {"id": "M2", "label": "Workflow ready", "period": 4},
+      {"id": "M3", "label": "Release", "period": 8}
+    ],
+    "workstreams": [
+      {
+        "name": "Platform foundation",
+        "items": [
+          {"id": "1.1", "name": "Provision the delivery environment", "start": 1, "end": 2, "status": "complete", "duration": "2w"},
+          {"id": "1.2", "name": "Build and test every change", "start": 1, "end": 3, "status": "active", "duration": "3w"}
+        ]
+      },
+      {
+        "name": "Core workflow and release",
+        "items": [
+          {"id": "2.1", "name": "Complete the first end-to-end user outcome", "start": 3, "end": 4, "status": "active", "duration": "2w"},
+          {"id": "2.2", "name": "Run pilot acceptance", "start": 5, "end": 6, "status": "upcoming", "duration": "2w", "critical": true},
+          {"id": "2.3", "name": "Release and stabilise", "start": 7, "end": 8, "status": "hypercare", "duration": "2w"}
+        ]
+      }
+    ],
+    "note": "Bars show approved timing; milestone and status lines show the delivery position.",
+    "source": "Approved delivery plan and current tracker state"
+  },
   "risks": [
     {
       "rating": "Amber",

@@ -34,7 +34,7 @@ delivery evidence
 | [`map-dependencies`](skills/map-dependencies/SKILL.md) | Blocking edges across the groomed story set |
 | [`plan-release`](skills/plan-release/SKILL.md) | Critical path, sprint cadence, milestone dates, honest reconciliation |
 | [`plan-sprint`](skills/plan-sprint/SKILL.md) | Close the last sprint, commit the next |
-| [`report-delivery`](skills/report-delivery/SKILL.md) | Turn live delivery evidence into a polished report for a chosen audience and period |
+| [`report-delivery`](skills/report-delivery/SKILL.md) | Turn live evidence into a polished report, with an optional source-backed A3 project-plan Gantt |
 
 **Model-invoked**
 

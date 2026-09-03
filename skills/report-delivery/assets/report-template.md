@@ -28,6 +28,10 @@
 
 {{ Baseline, current forecast, variance and carrying deliverables. }}
 
+### A3 project-plan Gantt (optional)
+
+{{ Append one A3 landscape page with phase bands, grouped task bars, milestone lines and the current-date line. Name the approved plan and live-status sources. }}
+
 ## Next period
 
 {{ Planned outcomes derived from the current plan and ready work. }}

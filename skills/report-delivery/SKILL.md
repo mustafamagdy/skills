@@ -70,6 +70,7 @@ Choose only sections that help the named audience. A useful default for a client
 6. Next-period plan
 7. Risks, dependencies, decisions and owners
 8. Evidence register
+9. A3 project-plan Gantt when the plan position materially helps the audience
 
 For an internal report, add delivery causes, operational detail and corrective actions. For a client-facing report, remove internal chatter, blame, unsupported speculation and implementation notes, but never hide a material delivery risk or misstate progress.
 
@@ -115,6 +116,24 @@ For paged documents:
 
 The report body belongs in the file. In the terminal, report the files written, the evidence cutoff, the few decisions or gaps that need attention, and nothing else.
 
+## Add an A3 project-plan Gantt
+
+When the user asks to show the project plan, timeline, delivery path, milestones or current position, add a task-level Gantt rather than a decorative sprint-block chart. Read [references/a3-gantt.md](references/a3-gantt.md) and populate the optional top-level `schedule` object in the report JSON.
+
+The page must be reusable across projects:
+
+- derive phase bands, workstreams, tasks, dates and milestone positions from that project's approved plan;
+- derive completed and active status from current delivery evidence;
+- show the evidence cutoff with one red vertical status line;
+- show milestone diamonds and full-height dashed milestone lines;
+- give task names a wide left column and keep time cells compact and equal;
+- mark a critical dependency only when the report also names its owner and requested action;
+- append the chart as one A3 landscape page while leaving the report body on its normal page size.
+
+`build-report.mjs` uses [scripts/gantt.mjs](scripts/gantt.mjs) to generate the same chart in every output. It writes a standalone SVG, embeds it in the HTML/PDF path, and places it on an A3 landscape master page in the FODT/DOCX path. The generator uses only Node.js standard-library features and does not require Python or packages.
+
+If the plan has more than 26 periods or 32 task rows, split the plan or add a second detailed appendix. Do not shrink the chart into unreadable text. If a converter does not preserve mixed page sizes, use an available document tool to place the generated SVG in a true A3 landscape section and verify the result.
+
 ## Verify
 
 Before delivery:
@@ -124,9 +143,10 @@ Before delivery:
 3. Confirm client-facing wording is accurate, neutral and free of internal notes.
 4. Render every page of DOCX or PDF and inspect it visually.
 5. Check that real evidence images remain readable at final size.
-6. Run available document, PDF and accessibility checks.
-7. Confirm the output opens and contains the expected text, pages and attachments.
-8. Run `node scripts/build-report.test.mjs` when the bundled renderer changed.
+6. When a Gantt exists, verify its bars, milestone lines and red status line against the approved plan and confirm the page is A3 landscape.
+7. Run available document, PDF and accessibility checks.
+8. Confirm the output opens and contains the expected text, pages and attachments.
+9. Run `node scripts/build-report.test.mjs` when the bundled renderer changed.
 
 ## Done when
 
@@ -136,6 +156,7 @@ Before delivery:
 - Actuals, forecasts and baseline commitments are not mixed.
 - Every risk has an owner and action where the evidence provides one.
 - No screenshot or system result was fabricated.
+- Any requested project-plan Gantt is source-backed, readable and preserved as A3 landscape in DOCX and PDF.
 - Requested files are polished, readable and verified page by page.
 - No tracker, plan or external destination changed unless separately requested.
 

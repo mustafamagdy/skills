@@ -2,6 +2,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { buildGanttSvg, ganttMarkdown, validateGantt } from './gantt.mjs';
 
 function usage() {
   console.error('Usage: node build-report.mjs <report.json> [--out-dir <directory>] [--name <base-name>]');
@@ -237,6 +238,7 @@ function buildMarkdown(data) {
   for (const section of data.sections) output.push(sectionMarkdown(section));
   if (list(data.risks).length) output.push(`## ${riskTable(data.risks).title}`, '', markdownTable({ ...riskTable(data.risks), title: null }));
   if (list(data.evidence).length) output.push(`## ${evidenceTable(data.evidence).title}`, '', markdownTable({ ...evidenceTable(data.evidence), title: null }));
+  if (data.schedule) output.push(ganttMarkdown(data.schedule));
   return `${output.join('\n').replace(/\n{3,}/g, '\n\n').trim()}\n`;
 }
 
@@ -246,13 +248,14 @@ function buildHtml(data, inputDir) {
   const organization = data.branding?.organization || '';
   const logo = data.branding?.logo ? `<img class="logo" src="${escapeHtml(imageSource(data.branding.logo, inputDir))}" alt="${escapeHtml(organization || 'Organization logo')}">` : '';
   const meta = metadata(report).map(([label, value]) => `<div class="meta-label">${escapeHtml(label)}</div><div>${escapeHtml(value)}</div>`).join('');
-  const contents = report.includeContents ? `<nav class="contents ${report.includeCover ? 'page-break-after' : ''}" aria-label="Table of contents"><h2>Contents</h2><ol>${data.sections.map((section) => `<li>${escapeHtml(section.title)}</li>`).join('')}${list(data.risks).length ? '<li>Risks, dependencies and decisions</li>' : ''}${list(data.evidence).length ? '<li>Evidence register</li>' : ''}</ol></nav>` : '';
+  const contents = report.includeContents ? `<nav class="contents ${report.includeCover ? 'page-break-after' : ''}" aria-label="Table of contents"><h2>Contents</h2><ol>${data.sections.map((section) => `<li>${escapeHtml(section.title)}</li>`).join('')}${list(data.risks).length ? '<li>Risks, dependencies and decisions</li>' : ''}${list(data.evidence).length ? '<li>Evidence register</li>' : ''}${data.schedule ? `<li>${escapeHtml(data.schedule.title)}</li>` : ''}</ol></nav>` : '';
   const coverClass = report.includeCover ? 'cover page-break-after' : 'cover compact';
   const body = data.sections.map((section) => sectionHtml(section, inputDir)).join('\n');
   const risks = list(data.risks).length ? `<section class="report-section"><h2>Risks, dependencies and decisions</h2>${htmlTable({ ...riskTable(data.risks), title: null })}</section>` : '';
   const evidence = list(data.evidence).length ? `<section class="report-section"><h2>Evidence register</h2>${htmlTable({ ...evidenceTable(data.evidence), title: null })}</section>` : '';
   const summary = list(data.executiveSummary).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('');
   const callouts = list(data.callouts).map(htmlCallout).join('');
+  const gantt = data.schedule ? `<section class="gantt-sheet" aria-label="${escapeHtml(data.schedule.title)}">${buildGanttSvg(data.schedule, { organization, accent, source: data.schedule.source })}</section>` : '';
   const css = `
     :root { --accent: ${accent}; --ink: #17202a; --muted: #5d6b7a; --navy: #10213c; --line: #d8dee8; --light: #f4f6f9; }
     * { box-sizing: border-box; }
@@ -304,9 +307,12 @@ function buildHtml(data, inputDir) {
     .report-section { break-inside: auto; }
     .page-break-after { break-after: page; page-break-after: always; }
     .footer { color: var(--muted); border-top: 1px solid var(--line); margin-top: 10mm; padding-top: 3mm; font-size: 8.5pt; }
+    .gantt-sheet { page: gantt; break-before: page; page-break-before: always; width: 420mm; height: 297mm; background: white; overflow: hidden; }
+    .gantt-sheet svg { display: block; width: 420mm; height: 297mm; }
     @page { size: A4; margin: 14mm; }
-    @media screen { body { background: #e8ebf0; padding: 10mm 0; } main { background: white; box-shadow: 0 2px 12px rgba(0,0,0,.12); } }
-    @media print { body { print-color-adjust: exact; -webkit-print-color-adjust: exact; } main { max-width: none; padding: 0; } }
+    @page gantt { size: A3 landscape; margin: 0; }
+    @media screen { body { background: #e8ebf0; padding: 10mm 0; } main, .gantt-sheet { background: white; box-shadow: 0 2px 12px rgba(0,0,0,.12); } .gantt-sheet { margin: 10mm auto 0; } }
+    @media print { body { print-color-adjust: exact; -webkit-print-color-adjust: exact; } main { max-width: none; padding: 0; } .gantt-sheet { margin: 0; } }
   `;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escapeHtml(report.title)}</title><style>${css}</style></head>
@@ -318,7 +324,7 @@ ${body}
 ${risks}
 ${evidence}
 <footer class="footer">Status as at ${escapeHtml(report.statusDate)} | ${escapeHtml(report.timezone)}</footer>
-</main></body></html>`;
+</main>${gantt}</body></html>`;
 }
 
 function escapeXml(value) {
@@ -397,6 +403,16 @@ function fodtImage(item, inputDir, index) {
   return `<text:p text:style-name="Image"><draw:frame draw:style-name="ImageFrame" draw:name="Evidence${index}" text:anchor-type="as-char" svg:width="${width}cm" svg:height="${height}cm"><draw:image draw:mime-type="${escapeXml(type)}"><office:binary-data>${base64}</office:binary-data></draw:image></draw:frame></text:p>${item.caption ? fodtParagraph(item.caption, 'Caption') : ''}`;
 }
 
+function fodtGantt(schedule, report, branding) {
+  const svg = buildGanttSvg(schedule, {
+    organization: branding?.organization || report.project || 'Delivery report',
+    accent: normalizeColor(branding?.accent),
+    source: schedule.source
+  });
+  const base64 = Buffer.from(svg, 'utf8').toString('base64');
+  return `<text:p text:style-name="GanttPageBreak"><draw:frame draw:style-name="GanttImageFrame" draw:name="DeliveryGantt" text:anchor-type="as-char" svg:width="41.2cm" svg:height="29cm"><draw:image draw:mime-type="image/svg+xml"><office:binary-data>${base64}</office:binary-data></draw:image></draw:frame></text:p>`;
+}
+
 function buildFodt(data, inputDir) {
   const report = data.report;
   const accent = normalizeColor(data.branding?.accent);
@@ -417,6 +433,7 @@ function buildFodt(data, inputDir) {
     const entries = [...data.sections.map((section) => section.title)];
     if (list(data.risks).length) entries.push('Risks, dependencies and decisions');
     if (list(data.evidence).length) entries.push('Evidence register');
+    if (data.schedule) entries.push(data.schedule.title);
     entries.forEach((entry, index) => output.push(fodtParagraph(`${index + 1}. ${entry}`, 'Contents')));
     output.push(fodtParagraph('', 'PageBreak'));
   }
@@ -455,6 +472,7 @@ function buildFodt(data, inputDir) {
     }
   }
   output.push(fodtParagraph(`Status as at ${report.statusDate} | ${report.timezone}`, 'Footer'));
+  if (data.schedule) output.push(fodtGantt(data.schedule, report, data.branding));
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <office:document office:version="1.3" office:mimetype="application/vnd.oasis.opendocument.text"
@@ -484,6 +502,7 @@ function buildFodt(data, inputDir) {
  <style:style style:name="Image" style:family="paragraph"><style:paragraph-properties fo:text-align="center" fo:margin-top="0.35cm" fo:margin-bottom="0.15cm"/></style:style>
  <style:style style:name="Footer" style:family="paragraph"><style:paragraph-properties fo:border-top="0.02cm solid #D8DEE8" fo:padding-top="0.2cm" fo:margin-top="0.8cm"/><style:text-properties fo:font-size="8pt" fo:color="#5D6B7A"/></style:style>
  <style:style style:name="PageBreak" style:family="paragraph"><style:paragraph-properties fo:break-before="page"/></style:style>
+ <style:style style:name="GanttPageBreak" style:family="paragraph" style:master-page-name="Gantt"><style:paragraph-properties fo:break-before="page" fo:margin="0cm" fo:padding="0cm"/></style:style>
  <style:style style:name="Bold" style:family="text"><style:text-properties fo:font-weight="bold"/></style:style>
  <text:list-style style:name="BulletList"><text:list-level-style-bullet text:level="1" text:bullet-char="•"><style:list-level-properties text:space-before="0.6cm" text:min-label-width="0.6cm"/></text:list-level-style-bullet></text:list-style>
 </office:styles>
@@ -508,9 +527,11 @@ function buildFodt(data, inputDir) {
  <style:style style:name="CalloutBlueCell" style:family="table-cell"><style:table-cell-properties fo:background-color="#EAF2FC" fo:border-left="0.1cm solid #1F5AA6" fo:padding="0.35cm"/></style:style>
  <style:style style:name="CalloutNeutralCell" style:family="table-cell"><style:table-cell-properties fo:background-color="#F4F6F9" fo:border-left="0.1cm solid #5D6B7A" fo:padding="0.35cm"/></style:style>
  <style:style style:name="ImageFrame" style:family="graphic"><style:graphic-properties style:run-through="foreground" style:wrap="none" draw:ole-draw-aspect="1"/></style:style>
+ <style:style style:name="GanttImageFrame" style:family="graphic"><style:graphic-properties style:run-through="foreground" style:wrap="none" draw:ole-draw-aspect="1"/></style:style>
  <style:page-layout style:name="PageLayout"><style:page-layout-properties fo:page-width="21cm" fo:page-height="29.7cm" style:print-orientation="portrait" fo:margin-top="1.4cm" fo:margin-bottom="1.5cm" fo:margin-left="1.5cm" fo:margin-right="1.5cm"/></style:page-layout>
+ <style:page-layout style:name="GanttPageLayout"><style:page-layout-properties fo:page-width="42cm" fo:page-height="29.7cm" style:print-orientation="landscape" fo:margin-top="0.35cm" fo:margin-bottom="0.35cm" fo:margin-left="0.4cm" fo:margin-right="0.4cm"/></style:page-layout>
 </office:automatic-styles>
-<office:master-styles><style:master-page style:name="Standard" style:page-layout-name="PageLayout"/></office:master-styles>
+<office:master-styles><style:master-page style:name="Standard" style:page-layout-name="PageLayout"/><style:master-page style:name="Gantt" style:page-layout-name="GanttPageLayout"/></office:master-styles>
 <office:body><office:text>${output.join('')}</office:text></office:body>
 </office:document>`;
 }
@@ -538,6 +559,13 @@ for (const risk of list(data.risks)) {
 for (const item of list(data.evidence)) {
   for (const field of ['source', 'statement', 'type']) requireValue(item[field], `every evidence item needs ${field}`);
 }
+if (data.schedule) {
+  try {
+    validateGantt(data.schedule);
+  } catch (error) {
+    fail(error.message);
+  }
+}
 
 const inputDir = path.dirname(inputPath);
 const outDir = path.resolve(args.outDir || inputDir);
@@ -546,7 +574,9 @@ fs.mkdirSync(outDir, { recursive: true });
 const markdownPath = path.join(outDir, `${baseName}.md`);
 const htmlPath = path.join(outDir, `${baseName}.html`);
 const fodtPath = path.join(outDir, `${baseName}.fodt`);
+const ganttPath = data.schedule ? path.join(outDir, `${baseName}-gantt.svg`) : null;
 fs.writeFileSync(markdownPath, buildMarkdown(data), 'utf8');
 fs.writeFileSync(htmlPath, buildHtml(data, inputDir), 'utf8');
 fs.writeFileSync(fodtPath, buildFodt(data, inputDir), 'utf8');
-console.log(JSON.stringify({ markdown: markdownPath, html: htmlPath, fodt: fodtPath }, null, 2));
+if (ganttPath) fs.writeFileSync(ganttPath, buildGanttSvg(data.schedule, { organization: data.branding?.organization || data.report.project, accent: normalizeColor(data.branding?.accent), source: data.schedule.source }), 'utf8');
+console.log(JSON.stringify({ markdown: markdownPath, html: htmlPath, fodt: fodtPath, ...(ganttPath ? { gantt: ganttPath } : {}) }, null, 2));

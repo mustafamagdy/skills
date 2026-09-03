@@ -39,7 +39,7 @@ delivery evidence
 | `/map-dependencies` | The story set is complete and you need to know what gates what | Blocking edges on the tracker |
 | `/plan-release` | Edges are set and you need dates, sprints and a critical path | `docs/delivery/release-plan.md` |
 | `/plan-sprint` | A sprint is about to start | Items assigned to the iteration, `docs/delivery/sprints/<n>.md` |
-| `/report-delivery` | You need an evidence-backed status, sprint, milestone, client or executive report | Report files in the requested format |
+| `/report-delivery` | You need an evidence-backed status, sprint, milestone, client or executive report | Report files in the requested format, optionally with an A3 project-plan Gantt |
 | `/backlog-audit` | Any time you distrust the board | A findings report, nothing written |
 
 ## Two ways in

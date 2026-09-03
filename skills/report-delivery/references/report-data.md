@@ -89,9 +89,15 @@ Paths are resolved relative to the JSON file. Local images are embedded into the
 
 Tone values are `green`, `amber`, `red`, `blue`, or `neutral`. Unknown values render as neutral.
 
+## Optional A3 project-plan Gantt
+
+Add a top-level `schedule` object when the report needs a one-page project plan with phase bands, task-level bars, milestone lines and a current-date line. Read [a3-gantt.md](a3-gantt.md) for the complete contract and validation rules.
+
+The report builder then creates an additional standalone SVG and appends it as an A3 landscape page in HTML/PDF and FODT/DOCX. Keep the chart at the end of the report so the A4 body is unaffected.
+
 ## Runtime ladder
 
-1. Run `build-report.mjs` with Node.js 18 or later. It has no package dependencies.
+1. Run `build-report.mjs` with Node.js 18 or later. It has no package dependencies. The optional Gantt uses the same runtime.
 2. For PDF, run `render-pdf.mjs`. It finds Chrome, Edge or Chromium, or uses `REPORT_BROWSER` when set.
 3. For DOCX, pass the generated `.fodt` file to `render-docx.mjs`. It finds LibreOffice, or uses `REPORT_LIBREOFFICE` when set.
 4. If Node.js is missing, use an available document tool with `assets/report-template.md`.
