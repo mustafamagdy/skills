@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "report": {
+    "title": "Delivery status report",
+    "type": "Weekly status",
+    "project": "Example project",
+    "audience": "Client",
+    "statusDate": "2026-09-03",
+    "timezone": "Asia/Riyadh",
+    "period": {
+      "label": "Reporting week",
+      "start": "2026-08-30",
+      "end": "2026-09-05"
+    },
+    "filename": "2026-09-03-delivery-status",
+    "includeCover": true,
+    "includeContents": true
+  },
+  "branding": {
+    "organization": "Delivery partner",
+    "accent": "#5B34DA"
+  },
+  "executiveSummary": [
+    "The period closed with the planned foundation in place. The next period focuses on the first end-to-end user outcome."
+  ],
+  "callouts": [
+    {
+      "label": "Delivery position",
+      "text": "The current milestone remains on plan.",
+      "tone": "green"
+    }
+  ],
+  "metrics": [
+    {
+      "value": "12",
+      "label": "Stories completed",
+      "detail": "During the reporting period",
+      "source": "Tracker query 123"
+    },
+    {
+      "value": "48 / 48",
+      "label": "Tests passed",
+      "detail": "Main branch build 456",
+      "source": "CI build 456"
+    }
+  ],
+  "sections": [
+    {
+      "title": "Progress in this period",
+      "paragraphs": [
+        "The team completed the planned platform foundation and verified the main branch release path."
+      ],
+      "bullets": [
+        "Users can authenticate and maintain a secure session.",
+        "Every change is built and tested automatically."
+      ],
+      "tables": [
+        {
+          "title": "Completed outcomes",
+          "columns": ["ID", "Outcome", "Status"],
+          "rows": [
+            ["S1", "A user can authenticate", "Done"],
+            ["S2", "A change is tested automatically", "Done"]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Next period",
+      "bullets": [
+        "Complete the first end-to-end transaction.",
+        "Attach test and product evidence to accepted work."
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "rating": "Amber",
+      "item": "Pilot equipment",
+      "impact": "The pilot demonstration depends on its availability.",
+      "owner": "Client",
+      "action": "Confirm the delivery date.",
+      "neededBy": "2026-09-10"
+    }
+  ],
+  "evidence": [
+    {
+      "source": "CI pipeline",
+      "statement": "Build 456 passed 48 of 48 automated tests.",
+      "type": "Build result",
+      "reference": "Build 456",
+      "asOf": "2026-09-03T08:00:00+03:00"
+    }
+  ]
+}

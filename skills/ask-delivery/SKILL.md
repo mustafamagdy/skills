@@ -25,6 +25,9 @@ requirements docs
    ├─ /map-dependencies ......... the story set → blocking edges
    ├─ /plan-release ............. edges + estimates → the route and the sprint cadence
    └─ /plan-sprint .............. the route → one sprint, committed
+
+delivery evidence
+   └─ /report-delivery .......... any point → a client, sprint, milestone or executive report
 ```
 
 | Step | Reach for it when | It leaves behind |
@@ -36,6 +39,7 @@ requirements docs
 | `/map-dependencies` | The story set is complete and you need to know what gates what | Blocking edges on the tracker |
 | `/plan-release` | Edges are set and you need dates, sprints and a critical path | `docs/delivery/release-plan.md` |
 | `/plan-sprint` | A sprint is about to start | Items assigned to the iteration, `docs/delivery/sprints/<n>.md` |
+| `/report-delivery` | You need an evidence-backed status, sprint, milestone, client or executive report | Report files in the requested format |
 | `/backlog-audit` | Any time you distrust the board | A findings report, nothing written |
 
 ## Two ways in
@@ -60,6 +64,8 @@ Which means the context advice is simple, and the opposite of a code-feature cha
 | Mid-step | Stay put. Only `/compact` if the window is genuinely tight. |
 
 The exception is `/ingest-requirements` into `/shape-backlog`. Those two think about the same material at different altitudes, and the second is much sharper with the first still in context. Run them together, then clear.
+
+`/report-delivery` is a sidecar, not another planning gate. Run it whenever a reporting period closes, a milestone approaches, or somebody needs a current evidence-backed position.
 
 ## The neighbouring skills
 

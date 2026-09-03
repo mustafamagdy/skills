@@ -1,6 +1,6 @@
 # House style
 
-Skills live flat under `skills/<name>/`, each with a `SKILL.md` and an `agents/openai.yaml`. There are no buckets: this repo covers one domain, and a bucket layer over nine skills is furniture.
+Skills live flat under `skills/<name>/`, each with a `SKILL.md` and an `agents/openai.yaml`. There are no buckets: this repo covers one domain, and a bucket layer over this focused set is furniture.
 
 Every skill is either **user-invoked** (`disable-model-invocation: true` in the frontmatter, `policy.allow_implicit_invocation: false` in `agents/openai.yaml`, a human-facing one-line description) or **model-invoked** (neither, and a description carrying its trigger branches). A skill is user-invoked in both harnesses or neither.
 

@@ -1,0 +1,100 @@
+# Report data
+
+Use the bundled renderer when the report needs repeatable Markdown, HTML, PDF or DOCX output. Prepare one JSON file, then keep it beside the report as the reproducible source unless it contains sensitive data. The builder writes Markdown, standalone HTML and a styled Flat OpenDocument Text file (`.fodt`).
+
+## Required shape
+
+```json
+{
+  "schemaVersion": 1,
+  "report": {
+    "title": "Delivery status report",
+    "type": "Weekly status",
+    "project": "Project name",
+    "audience": "Client",
+    "statusDate": "2026-09-03",
+    "timezone": "Asia/Riyadh",
+    "period": {
+      "label": "Sprint 3",
+      "start": "2026-08-23",
+      "end": "2026-09-05"
+    },
+    "filename": "2026-09-03-weekly-status",
+    "includeCover": true,
+    "includeContents": true
+  },
+  "executiveSummary": ["One or two outcome-led paragraphs."],
+  "sections": []
+}
+```
+
+`schemaVersion`, `report.title`, `report.statusDate`, `report.timezone`, `report.audience`, and `sections` are required. Use ISO dates in the JSON. The prose may use the audience's preferred date format.
+
+## Optional content
+
+```json
+{
+  "branding": {
+    "organization": "Delivery partner",
+    "accent": "#5B34DA",
+    "logo": "./logo.png"
+  },
+  "callouts": [
+    {"label": "Delivery position", "text": "The release remains on plan.", "tone": "green"}
+  ],
+  "metrics": [
+    {"value": "24", "label": "Stories completed", "detail": "During the period", "source": "Tracker query 123"}
+  ],
+  "sections": [
+    {
+      "title": "Progress this period",
+      "subtitle": "Outcomes completed since the previous report",
+      "paragraphs": ["Narrative paragraph."],
+      "bullets": ["Outcome one", "Outcome two"],
+      "tables": [
+        {
+          "title": "Completed work",
+          "columns": ["ID", "Outcome", "Status"],
+          "rows": [["S1", "A user can sign in", "Done"]]
+        }
+      ],
+      "images": [
+        {"path": "./evidence/tests.png", "alt": "Test result summary", "caption": "Build 123 passed 121 tests."}
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "rating": "Amber",
+      "item": "Pilot hardware",
+      "impact": "Pilot evidence cannot complete without it.",
+      "owner": "Client",
+      "action": "Confirm delivery date.",
+      "neededBy": "2026-09-10"
+    }
+  ],
+  "evidence": [
+    {
+      "source": "CI pipeline",
+      "statement": "Build 123 passed 121 of 121 tests.",
+      "type": "Azure DevOps",
+      "reference": "https://example.invalid/build/123",
+      "asOf": "2026-09-03T08:00:00+03:00"
+    }
+  ]
+}
+```
+
+Paths are resolved relative to the JSON file. Local images are embedded into the HTML so it remains portable. HTTP image URLs remain links and make the HTML dependent on network access, so prefer local evidence files.
+
+Tone values are `green`, `amber`, `red`, `blue`, or `neutral`. Unknown values render as neutral.
+
+## Runtime ladder
+
+1. Run `build-report.mjs` with Node.js 18 or later. It has no package dependencies.
+2. For PDF, run `render-pdf.mjs`. It finds Chrome, Edge or Chromium, or uses `REPORT_BROWSER` when set.
+3. For DOCX, pass the generated `.fodt` file to `render-docx.mjs`. It finds LibreOffice, or uses `REPORT_LIBREOFFICE` when set.
+4. If Node.js is missing, use an available document tool with `assets/report-template.md`.
+5. If no document tool exists, fill the Markdown template directly and explain which richer formats could not be rendered.
+
+Do not install runtimes, browsers or office software without the user's approval.

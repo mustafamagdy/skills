@@ -15,6 +15,9 @@ requirements docs
    ├─ /map-dependencies ...... the story set → blocking edges
    ├─ /plan-release .......... edges + estimates → the route and the cadence
    └─ /plan-sprint ........... the route → one sprint, committed
+
+delivery evidence
+   └─ /report-delivery ....... any point → a client, sprint, milestone or executive report
 ```
 
 ## Skills
@@ -31,6 +34,7 @@ requirements docs
 | [`map-dependencies`](skills/map-dependencies/SKILL.md) | Blocking edges across the groomed story set |
 | [`plan-release`](skills/plan-release/SKILL.md) | Critical path, sprint cadence, milestone dates, honest reconciliation |
 | [`plan-sprint`](skills/plan-sprint/SKILL.md) | Close the last sprint, commit the next |
+| [`report-delivery`](skills/report-delivery/SKILL.md) | Turn live delivery evidence into a polished report for a chosen audience and period |
 
 **Model-invoked**
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Report Delivery"
+  short_description: "Create evidence-backed delivery reports"
+  default_prompt: "Use $report-delivery to create a polished delivery report for this reporting period."
+policy:
+  allow_implicit_invocation: false
