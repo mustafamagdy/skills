@@ -7,6 +7,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { buildGanttSvg, validateGantt } from './gantt.mjs';
+import { buildSprintLogSvg, validateSprintLog } from './sprint-log.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'report-build-test-'));
@@ -67,6 +68,34 @@ try {
         }
       ],
       source: 'Approved delivery baseline and tracker status'
+    },
+    sprintLog: {
+      title: 'Sprint delivery log',
+      subtitle: 'Committed and current work | Status as at 3 September 2026',
+      statusDate: '2026-09-03',
+      sprints: [
+        {
+          name: 'Sprint 3',
+          label: 'Foundation',
+          shortName: 'S3',
+          startDate: '23 Aug',
+          endDate: '5 Sep 2026',
+          items: [
+            { id: 'S1', sprint: 'S3', module: 'Platform', name: 'Provision the environment', priority: 'Critical', points: 8, assignee: 'DevOps', status: 'Closed', notes: 'M2 Gate' }
+          ]
+        },
+        {
+          name: 'Sprint 4',
+          label: 'Pilot path',
+          shortName: 'S4',
+          startDate: '6 Sep',
+          endDate: '19 Sep 2026',
+          items: [
+            { id: 'S2', sprint: 'S4', module: 'Fuelling', name: 'Issue a payment token', priority: 'High', points: 5, assignee: 'Backend', status: 'Active', notes: 'M3 Gate' }
+          ]
+        }
+      ],
+      source: 'Tracker snapshot 123'
     }
   }, null, 2));
   const result = spawnSync(process.execPath, [path.join(here, 'build-report.mjs'), input, '--out-dir', temporary], { encoding: 'utf8' });
@@ -75,12 +104,14 @@ try {
   const html = fs.readFileSync(path.join(temporary, 'test-report.html'), 'utf8');
   const fodt = fs.readFileSync(path.join(temporary, 'test-report.fodt'), 'utf8');
   const gantt = fs.readFileSync(path.join(temporary, 'test-report-gantt.svg'), 'utf8');
+  const sprintLog = fs.readFileSync(path.join(temporary, 'test-report-sprint-log.svg'), 'utf8');
   assert.match(markdown, /# Test report/);
   assert.match(markdown, /\| Build \| Passed \|/);
   assert.match(html, /data:image\/svg\+xml;base64,/);
   assert.match(html, /Risks, dependencies and decisions/);
   assert.match(html, /Evidence register/);
   assert.match(html, /class="gantt-sheet"/);
+  assert.match(html, /Sprint delivery log/);
   assert.match(html, /@page gantt/);
   assert.doesNotMatch(html, /TODO/);
   assert.match(fodt, /office:mimetype="application\/vnd\.oasis\.opendocument\.text"/);
@@ -88,8 +119,11 @@ try {
   assert.match(fodt, /Risks, dependencies and decisions/);
   assert.match(fodt, /GanttPageLayout/);
   assert.match(fodt, /draw:mime-type="image\/svg\+xml"/);
+  assert.match(fodt, /draw:name="SprintLog"/);
   assert.match(gantt, /Example delivery schedule/);
-  assert.match(gantt, /stroke-dasharray="7 6"/);
+  assert.match(gantt, /Activity \/ Work Package/);
+  assert.match(gantt, /Sprint 1/);
+  assert.match(gantt, /stroke-dasharray="6 5"/);
   assert.match(gantt, /TODAY/);
   assert.match(gantt, /● 1\.2/);
   assert.doesNotThrow(() => validateGantt(JSON.parse(fs.readFileSync(input, 'utf8')).schedule));
@@ -101,6 +135,9 @@ try {
     ] }]
   }), /duplicate schedule item id/);
   assert.match(buildGanttSvg(JSON.parse(fs.readFileSync(input, 'utf8')).schedule), /viewBox="0 0 1600 1131"/);
+  assert.doesNotThrow(() => validateSprintLog(JSON.parse(fs.readFileSync(input, 'utf8')).sprintLog));
+  assert.match(buildSprintLogSvg(JSON.parse(fs.readFileSync(input, 'utf8')).sprintLog), /User Story \/ Task/);
+  assert.match(sprintLog, /Sprint 4 - Pilot path/);
   console.log('build-report tests passed');
 } finally {
   fs.rmSync(temporary, { recursive: true, force: true });

@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { buildGanttSvg, ganttMarkdown, validateGantt } from './gantt.mjs';
+import { buildSprintLogSvg, sprintLogMarkdown, validateSprintLog } from './sprint-log.mjs';
 
 function usage() {
   console.error('Usage: node build-report.mjs <report.json> [--out-dir <directory>] [--name <base-name>]');
@@ -239,6 +240,7 @@ function buildMarkdown(data) {
   if (list(data.risks).length) output.push(`## ${riskTable(data.risks).title}`, '', markdownTable({ ...riskTable(data.risks), title: null }));
   if (list(data.evidence).length) output.push(`## ${evidenceTable(data.evidence).title}`, '', markdownTable({ ...evidenceTable(data.evidence), title: null }));
   if (data.schedule) output.push(ganttMarkdown(data.schedule));
+  if (data.sprintLog) output.push(sprintLogMarkdown(data.sprintLog));
   return `${output.join('\n').replace(/\n{3,}/g, '\n\n').trim()}\n`;
 }
 
@@ -248,7 +250,7 @@ function buildHtml(data, inputDir) {
   const organization = data.branding?.organization || '';
   const logo = data.branding?.logo ? `<img class="logo" src="${escapeHtml(imageSource(data.branding.logo, inputDir))}" alt="${escapeHtml(organization || 'Organization logo')}">` : '';
   const meta = metadata(report).map(([label, value]) => `<div class="meta-label">${escapeHtml(label)}</div><div>${escapeHtml(value)}</div>`).join('');
-  const contents = report.includeContents ? `<nav class="contents ${report.includeCover ? 'page-break-after' : ''}" aria-label="Table of contents"><h2>Contents</h2><ol>${data.sections.map((section) => `<li>${escapeHtml(section.title)}</li>`).join('')}${list(data.risks).length ? '<li>Risks, dependencies and decisions</li>' : ''}${list(data.evidence).length ? '<li>Evidence register</li>' : ''}${data.schedule ? `<li>${escapeHtml(data.schedule.title)}</li>` : ''}</ol></nav>` : '';
+  const contents = report.includeContents ? `<nav class="contents ${report.includeCover ? 'page-break-after' : ''}" aria-label="Table of contents"><h2>Contents</h2><ol>${data.sections.map((section) => `<li>${escapeHtml(section.title)}</li>`).join('')}${list(data.risks).length ? '<li>Risks, dependencies and decisions</li>' : ''}${list(data.evidence).length ? '<li>Evidence register</li>' : ''}${data.schedule ? `<li>${escapeHtml(data.schedule.title)}</li>` : ''}${data.sprintLog ? `<li>${escapeHtml(data.sprintLog.title)}</li>` : ''}</ol></nav>` : '';
   const coverClass = report.includeCover ? 'cover page-break-after' : 'cover compact';
   const body = data.sections.map((section) => sectionHtml(section, inputDir)).join('\n');
   const risks = list(data.risks).length ? `<section class="report-section"><h2>Risks, dependencies and decisions</h2>${htmlTable({ ...riskTable(data.risks), title: null })}</section>` : '';
@@ -256,6 +258,7 @@ function buildHtml(data, inputDir) {
   const summary = list(data.executiveSummary).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('');
   const callouts = list(data.callouts).map(htmlCallout).join('');
   const gantt = data.schedule ? `<section class="gantt-sheet" aria-label="${escapeHtml(data.schedule.title)}">${buildGanttSvg(data.schedule, { organization, accent, source: data.schedule.source })}</section>` : '';
+  const sprintLog = data.sprintLog ? `<section class="gantt-sheet" aria-label="${escapeHtml(data.sprintLog.title)}">${buildSprintLogSvg(data.sprintLog, { organization, accent, source: data.sprintLog.source })}</section>` : '';
   const css = `
     :root { --accent: ${accent}; --ink: #17202a; --muted: #5d6b7a; --navy: #10213c; --line: #d8dee8; --light: #f4f6f9; }
     * { box-sizing: border-box; }
@@ -324,7 +327,7 @@ ${body}
 ${risks}
 ${evidence}
 <footer class="footer">Status as at ${escapeHtml(report.statusDate)} | ${escapeHtml(report.timezone)}</footer>
-</main>${gantt}</body></html>`;
+</main>${gantt}${sprintLog}</body></html>`;
 }
 
 function escapeXml(value) {
@@ -413,6 +416,16 @@ function fodtGantt(schedule, report, branding) {
   return `<text:p text:style-name="GanttPageBreak"><draw:frame draw:style-name="GanttImageFrame" draw:name="DeliveryGantt" text:anchor-type="as-char" svg:width="41.2cm" svg:height="29cm"><draw:image draw:mime-type="image/svg+xml"><office:binary-data>${base64}</office:binary-data></draw:image></draw:frame></text:p>`;
 }
 
+function fodtSprintLog(sprintLog, report, branding) {
+  const svg = buildSprintLogSvg(sprintLog, {
+    organization: branding?.organization || report.project || 'Delivery report',
+    accent: normalizeColor(branding?.accent),
+    source: sprintLog.source
+  });
+  const base64 = Buffer.from(svg, 'utf8').toString('base64');
+  return `<text:p text:style-name="GanttPageBreak"><draw:frame draw:style-name="GanttImageFrame" draw:name="SprintLog" text:anchor-type="as-char" svg:width="41.2cm" svg:height="29cm"><draw:image draw:mime-type="image/svg+xml"><office:binary-data>${base64}</office:binary-data></draw:image></draw:frame></text:p>`;
+}
+
 function buildFodt(data, inputDir) {
   const report = data.report;
   const accent = normalizeColor(data.branding?.accent);
@@ -434,6 +447,7 @@ function buildFodt(data, inputDir) {
     if (list(data.risks).length) entries.push('Risks, dependencies and decisions');
     if (list(data.evidence).length) entries.push('Evidence register');
     if (data.schedule) entries.push(data.schedule.title);
+    if (data.sprintLog) entries.push(data.sprintLog.title);
     entries.forEach((entry, index) => output.push(fodtParagraph(`${index + 1}. ${entry}`, 'Contents')));
     output.push(fodtParagraph('', 'PageBreak'));
   }
@@ -473,6 +487,7 @@ function buildFodt(data, inputDir) {
   }
   output.push(fodtParagraph(`Status as at ${report.statusDate} | ${report.timezone}`, 'Footer'));
   if (data.schedule) output.push(fodtGantt(data.schedule, report, data.branding));
+  if (data.sprintLog) output.push(fodtSprintLog(data.sprintLog, report, data.branding));
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <office:document office:version="1.3" office:mimetype="application/vnd.oasis.opendocument.text"
@@ -566,6 +581,13 @@ if (data.schedule) {
     fail(error.message);
   }
 }
+if (data.sprintLog) {
+  try {
+    validateSprintLog(data.sprintLog);
+  } catch (error) {
+    fail(error.message);
+  }
+}
 
 const inputDir = path.dirname(inputPath);
 const outDir = path.resolve(args.outDir || inputDir);
@@ -575,8 +597,10 @@ const markdownPath = path.join(outDir, `${baseName}.md`);
 const htmlPath = path.join(outDir, `${baseName}.html`);
 const fodtPath = path.join(outDir, `${baseName}.fodt`);
 const ganttPath = data.schedule ? path.join(outDir, `${baseName}-gantt.svg`) : null;
+const sprintLogPath = data.sprintLog ? path.join(outDir, `${baseName}-sprint-log.svg`) : null;
 fs.writeFileSync(markdownPath, buildMarkdown(data), 'utf8');
 fs.writeFileSync(htmlPath, buildHtml(data, inputDir), 'utf8');
 fs.writeFileSync(fodtPath, buildFodt(data, inputDir), 'utf8');
 if (ganttPath) fs.writeFileSync(ganttPath, buildGanttSvg(data.schedule, { organization: data.branding?.organization || data.report.project, accent: normalizeColor(data.branding?.accent), source: data.schedule.source }), 'utf8');
-console.log(JSON.stringify({ markdown: markdownPath, html: htmlPath, fodt: fodtPath, ...(ganttPath ? { gantt: ganttPath } : {}) }, null, 2));
+if (sprintLogPath) fs.writeFileSync(sprintLogPath, buildSprintLogSvg(data.sprintLog, { organization: data.branding?.organization || data.report.project, accent: normalizeColor(data.branding?.accent), source: data.sprintLog.source }), 'utf8');
+console.log(JSON.stringify({ markdown: markdownPath, html: htmlPath, fodt: fodtPath, ...(ganttPath ? { gantt: ganttPath } : {}), ...(sprintLogPath ? { sprintLog: sprintLogPath } : {}) }, null, 2));

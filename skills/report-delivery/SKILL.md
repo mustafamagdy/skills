@@ -1,7 +1,6 @@
 ---
 name: report-delivery
 description: "Create an evidence-backed delivery report for a chosen audience and period, such as a weekly update, sprint review, milestone pack or executive status report. Reads plans, trackers, build systems and operational evidence, then produces polished files without changing delivery state."
-disable-model-invocation: true
 ---
 
 # Report Delivery
@@ -71,6 +70,7 @@ Choose only sections that help the named audience. A useful default for a client
 7. Risks, dependencies, decisions and owners
 8. Evidence register
 9. A3 project-plan Gantt when the plan position materially helps the audience
+10. A3 sprint delivery log when story-level sprint detail helps the meeting
 
 For an internal report, add delivery causes, operational detail and corrective actions. For a client-facing report, remove internal chatter, blame, unsupported speculation and implementation notes, but never hide a material delivery risk or misstate progress.
 
@@ -134,6 +134,14 @@ The page must be reusable across projects:
 
 If the plan has more than 26 periods or 32 task rows, split the plan or add a second detailed appendix. Do not shrink the chart into unreadable text. If a converter does not preserve mixed page sizes, use an available document tool to place the generated SVG in a true A3 landscape section and verify the result.
 
+## Add an A3 sprint delivery log
+
+When the user asks for a sprint log, backlog by sprint, story appendix or detailed sprint position, populate the optional top-level `sprintLog` object in the report JSON. Read [references/sprint-log.md](references/sprint-log.md).
+
+The page follows a practical spreadsheet planning convention: a dark navy column header, one full-width navy band per sprint, compact alternating story rows, and priority and status colours. Show the fields the tracker can support: Sprint, Module, User Story or Task, Priority, Story Points, Assignee, Status and Notes. Do not invent missing values.
+
+Use the sprint log for the reporting sprint and the next sprint by default. Include more sprints only when the audience needs them and the page remains readable. The renderer supports up to 70 story rows on one A3 landscape page.
+
 ## Verify
 
 Before delivery:
@@ -144,9 +152,10 @@ Before delivery:
 4. Render every page of DOCX or PDF and inspect it visually.
 5. Check that real evidence images remain readable at final size.
 6. When a Gantt exists, verify its bars, milestone lines and red status line against the approved plan and confirm the page is A3 landscape.
-7. Run available document, PDF and accessibility checks.
-8. Confirm the output opens and contains the expected text, pages and attachments.
-9. Run `node scripts/build-report.test.mjs` when the bundled renderer changed.
+7. When a sprint log exists, verify group membership, story points, owners and current tracker states and confirm the page is A3 landscape.
+8. Run available document, PDF and accessibility checks.
+9. Confirm the output opens and contains the expected text, pages and attachments.
+10. Run `node scripts/build-report.test.mjs` when the bundled renderer changed.
 
 ## Done when
 
@@ -157,6 +166,7 @@ Before delivery:
 - Every risk has an owner and action where the evidence provides one.
 - No screenshot or system result was fabricated.
 - Any requested project-plan Gantt is source-backed, readable and preserved as A3 landscape in DOCX and PDF.
+- Any requested sprint delivery log is source-backed, readable and preserved as A3 landscape in DOCX and PDF.
 - Requested files are polished, readable and verified page by page.
 - No tracker, plan or external destination changed unless separately requested.
 

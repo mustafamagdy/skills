@@ -95,6 +95,12 @@ Add a top-level `schedule` object when the report needs a one-page project plan 
 
 The report builder then creates an additional standalone SVG and appends it as an A3 landscape page in HTML/PDF and FODT/DOCX. Keep the chart at the end of the report so the A4 body is unaffected.
 
+## Optional A3 sprint delivery log
+
+Add a top-level `sprintLog` object when the report needs story-level sprint detail. Read [sprint-log.md](sprint-log.md) for the data contract and validation rules.
+
+The builder writes a second standalone SVG and appends it as an A3 landscape page after the Gantt. The log uses full-width sprint bands and columns for Sprint, Module, User Story or Task, Priority, Story Points, Assignee, Status and Notes.
+
 ## Runtime ladder
 
 1. Run `build-report.mjs` with Node.js 18 or later. It has no package dependencies. The optional Gantt uses the same runtime.

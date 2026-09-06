@@ -23,6 +23,10 @@ Add `schedule` at the top level of the report JSON:
     "phases": [
       {"label": "P1 Foundations", "start": 1, "end": 4, "color": "#6C97BF"}
     ],
+    "sprints": [
+      {"label": "Sprint 1", "start": 1, "end": 2},
+      {"label": "Sprint 2", "start": 3, "end": 4}
+    ],
     "milestones": [
       {"id": "M1", "label": "Design approval", "period": 2}
     ],
@@ -58,6 +62,7 @@ Add `schedule` at the top level of the report JSON:
 | `statusPeriod` | One-based period whose right boundary carries the red current-date line. Set this from the approved calendar and cutoff; do not guess it from a stale plan. |
 | `periods` | Two to 26 equal visual periods. Each needs a label; `date` is an optional short display cue. |
 | `phases` | Optional top bands. `start` and `end` are inclusive one-based period numbers. |
+| `sprints` | Optional sprint bands shown directly under the week header. When omitted, the renderer groups consecutive periods in pairs. |
 | `milestones` | Optional milestone diamonds and full-height dashed lines. `period` is the one-based boundary after that period. |
 | `workstreams` | One or more named groups. The page supports up to 32 task rows. |
 | `items` | Each task needs a unique ID, name, inclusive start/end period and status. |
@@ -85,7 +90,8 @@ The Gantt is appended at the end so the report can switch to A3 without disturbi
 
 - Make the deliverable column materially wider than one period cell.
 - Keep every period cell equal in width.
-- Use phase bands across the top and group headers down the left.
+- Use phase bands across the top, a compact sprint band below the week header and group headers down the left.
+- Show ID, Phase, Activity or Work Package, Owner, Start and End before the compact week cells. Leave optional values blank rather than inventing them.
 - Put duration labels inside bars only when they remain readable.
 - Draw milestone diamonds above full-height dashed milestone lines.
 - Draw one solid red status line and label it `TODAY`.

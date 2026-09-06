@@ -6,11 +6,11 @@ const STATUS_COLORS = {
 };
 
 const COLORS = {
-  navy: '#102746',
+  navy: '#173A5E',
   muted: '#607086',
-  grid: '#D7E0EA',
-  group: '#E9EEF4',
-  band: '#F0F4F8',
+  grid: '#B9BEC4',
+  group: '#F7E9C7',
+  band: '#F2F2F2',
   gold: '#D4AF37',
   red: '#C62828',
   redLight: '#FCE9E8',
@@ -150,27 +150,35 @@ export function buildGanttSvg(schedule, context = {}) {
   const { periodCount, itemCount } = validateGantt(schedule);
   const width = 1600;
   const height = 1131;
-  const margin = 34;
-  const leftWidth = 520;
-  const codeWidth = 52;
+  const margin = 30;
+  const idWidth = 45;
+  const phaseWidth = 64;
+  const taskWidth = 365;
+  const ownerWidth = 136;
+  const startWidth = 45;
+  const endWidth = 45;
+  const leftWidth = idWidth + phaseWidth + taskWidth + ownerWidth + startWidth + endWidth;
   const timelineX = margin + leftWidth;
   const timelineWidth = width - margin * 2 - leftWidth;
   const periodWidth = timelineWidth / periodCount;
-  const phaseY = 142;
-  const phaseHeight = 34;
-  const markerY = 180;
-  const markerHeight = 40;
-  const headerY = 222;
-  const headerHeight = 44;
-  const chartBottom = 1055;
-  const sourceY = 1096;
-  const rowBudget = chartBottom - (headerY + headerHeight);
-  const groupWeight = 0.82;
+  const phaseY = 88;
+  const phaseHeight = 30;
+  const markerY = 120;
+  const markerHeight = 34;
+  const headerY = 156;
+  const headerHeight = 36;
+  const sprintY = headerY + headerHeight;
+  const sprintHeight = 24;
+  const chartStart = sprintY + sprintHeight;
+  const chartBottom = 1037;
+  const sourceY = 1106;
+  const rowBudget = chartBottom - chartStart;
+  const groupWeight = 0.9;
   const weightedRows = itemCount + schedule.workstreams.length * groupWeight;
-  const itemHeight = Math.min(30, Math.max(19, rowBudget / weightedRows));
+  const itemHeight = Math.min(40, Math.max(18, rowBudget / weightedRows));
   const groupHeight = itemHeight * groupWeight;
   const chartHeight = itemCount * itemHeight + schedule.workstreams.length * groupHeight;
-  const actualBottom = headerY + headerHeight + chartHeight;
+  const actualBottom = chartStart + chartHeight;
   const parts = [];
   const accent = normalizeColor(context.accent, '#5B34E6');
 
@@ -178,55 +186,74 @@ export function buildGanttSvg(schedule, context = {}) {
   parts.push(`<title id="gantt-title">${escapeXml(schedule.title)}</title>`);
   parts.push(`<desc id="gantt-desc">Task-level delivery schedule with phase bands, milestone lines, and a current status line.</desc>`);
   parts.push(rect(0, 0, width, height, COLORS.white));
-  parts.push(text(margin, 29, String(context.organization || '').toUpperCase(), { size: 11, weight: 700, fill: COLORS.muted }));
-  parts.push(line(margin, 39, width - margin, 39, { stroke: accent, width: 2 }));
-  parts.push(text(margin, 72, schedule.title, { size: 29, weight: 800 }));
+  parts.push(text(width / 2, 34, schedule.title, { size: 27, weight: 800, anchor: 'middle' }));
   const subtitle = schedule.subtitle || `${periodCount} periods | Status as at ${schedule.statusDate}`;
-  parts.push(text(margin, 96, subtitle, { size: 13, fill: COLORS.muted }));
-  parts.push(statusLegend(margin, 108, width - margin * 2, 27));
+  parts.push(text(width / 2, 58, subtitle, { size: 12.5, fill: COLORS.muted, anchor: 'middle' }));
+  if (context.organization) parts.push(text(width - margin, 34, String(context.organization).toUpperCase(), { size: 10.5, weight: 700, fill: COLORS.muted, anchor: 'end' }));
 
   // Phase bands.
-  parts.push(rect(margin, phaseY, leftWidth - 2, phaseHeight, COLORS.white));
+  parts.push(rect(margin, phaseY, leftWidth, phaseHeight, COLORS.white, { stroke: 'none' }));
   for (const phase of list(schedule.phases)) {
     const x = timelineX + (phase.start - 1) * periodWidth;
     const bandWidth = (phase.end - phase.start + 1) * periodWidth - 2;
     const fill = normalizeColor(phase.color, accent);
     parts.push(rect(x, phaseY, bandWidth, phaseHeight, fill, { radius: 2 }));
-    parts.push(text(x + bandWidth / 2, phaseY + 22, fitText(phase.label.toUpperCase(), Math.max(8, Math.floor(bandWidth / 8))), { size: 11, weight: 700, fill: COLORS.white, anchor: 'middle' }));
+    parts.push(text(x + bandWidth / 2, phaseY + 20, fitText(phase.label, Math.max(7, Math.floor(bandWidth / 5.6))), { size: 9, weight: 700, fill: COLORS.white, anchor: 'middle' }));
   }
 
   // Milestone labels and current status marker.
   for (const milestone of list(schedule.milestones)) {
     const x = timelineX + milestone.period * periodWidth;
-    parts.push(text(x - 4, markerY + 12, milestone.id, { size: 11, weight: 800, fill: '#B58B11', anchor: 'middle' }));
-    parts.push(`<path d="M ${x - 9} ${markerY + 25} L ${x - 4} ${markerY + 20} L ${x + 1} ${markerY + 25} L ${x - 4} ${markerY + 30} Z" fill="#C59A1D"/>`);
-    parts.push(line(x, markerY + 20, x, actualBottom, { stroke: COLORS.gold, width: 1.5, dash: '7 6' }));
+    parts.push(text(x, markerY + 11, milestone.id, { size: 10.5, weight: 800, fill: '#B58B11', anchor: 'middle' }));
+    parts.push(`<path d="M ${x - 6} ${markerY + 22} L ${x} ${markerY + 16} L ${x + 6} ${markerY + 22} L ${x} ${markerY + 28} Z" fill="#C59A1D"/>`);
+    parts.push(line(x, markerY + 16, x, actualBottom, { stroke: COLORS.gold, width: 1.4, dash: '6 5' }));
   }
   const currentX = timelineX + schedule.statusPeriod * periodWidth;
   const sharesMilestone = list(schedule.milestones).some((milestone) => milestone.period === schedule.statusPeriod);
-  parts.push(text(currentX - (sharesMilestone ? 26 : 7), markerY + 12, 'TODAY', { size: 10, weight: 800, fill: COLORS.red, anchor: sharesMilestone ? 'end' : 'middle' }));
-  parts.push(`<path d="M ${currentX - 12} ${markerY + 22} L ${currentX - 2} ${markerY + 22} L ${currentX - 7} ${markerY + 30} Z" fill="${COLORS.red}"/>`);
-  parts.push(line(currentX, markerY + 20, currentX, actualBottom, { stroke: COLORS.red, width: 3 }));
+  parts.push(text(currentX - (sharesMilestone ? 11 : 0), markerY + 11, 'TODAY', { size: 9.5, weight: 800, fill: COLORS.red, anchor: sharesMilestone ? 'end' : 'middle' }));
+  parts.push(`<path d="M ${currentX - 6} ${markerY + 18} L ${currentX + 6} ${markerY + 18} L ${currentX} ${markerY + 28} Z" fill="${COLORS.red}"/>`);
+  parts.push(line(currentX, markerY + 18, currentX, actualBottom, { stroke: COLORS.red, width: 3 }));
 
   // Header and time grid.
-  parts.push(rect(margin, headerY, leftWidth, headerHeight, COLORS.navy));
-  parts.push(text(margin + 19, headerY + 28, 'ID', { size: 10, weight: 700, fill: COLORS.white, anchor: 'middle' }));
-  parts.push(text(margin + codeWidth + 10, headerY + 28, 'DELIVERABLE / WORK PACKAGE', { size: 11, weight: 700, fill: COLORS.white }));
+  const leftColumns = [
+    ['ID', idWidth, 'middle'],
+    ['Phase', phaseWidth, 'middle'],
+    ['Activity / Work Package', taskWidth, 'middle'],
+    ['Owner', ownerWidth, 'middle'],
+    ['Start', startWidth, 'middle'],
+    ['End', endWidth, 'middle']
+  ];
+  let leftX = margin;
+  for (const [label, columnWidth] of leftColumns) {
+    parts.push(rect(leftX, headerY, columnWidth, headerHeight, COLORS.navy, { stroke: COLORS.white, strokeWidth: 0.7 }));
+    parts.push(text(leftX + columnWidth / 2, headerY + 23, label, { size: 10, weight: 700, fill: COLORS.white, anchor: 'middle' }));
+    leftX += columnWidth;
+  }
   for (let index = 0; index < periodCount; index += 1) {
     const period = schedule.periods[index];
     const x = timelineX + index * periodWidth;
-    parts.push(rect(x, headerY, periodWidth, headerHeight, COLORS.navy));
-    parts.push(text(x + periodWidth / 2, headerY + 18, period.label || `P${index + 1}`, { size: 9, weight: 700, fill: COLORS.white, anchor: 'middle' }));
-    if (period.date) parts.push(text(x + periodWidth / 2, headerY + 33, period.date, { size: 7.5, weight: 600, fill: COLORS.white, anchor: 'middle' }));
+    parts.push(rect(x, headerY, periodWidth, headerHeight, COLORS.navy, { stroke: COLORS.white, strokeWidth: 0.7 }));
+    parts.push(text(x + periodWidth / 2, headerY + 15, period.label || `P${index + 1}`, { size: 8.5, weight: 700, fill: COLORS.white, anchor: 'middle' }));
+    if (period.date) parts.push(text(x + periodWidth / 2, headerY + 29, period.date, { size: 6.8, weight: 600, fill: COLORS.white, anchor: 'middle' }));
   }
-  parts.push(line(margin + codeWidth, headerY, margin + codeWidth, actualBottom, { stroke: COLORS.grid, width: 1 }));
-  parts.push(line(timelineX, headerY, timelineX, actualBottom, { stroke: COLORS.grid, width: 1 }));
 
-  let y = headerY + headerHeight;
+  // Two-week sprint bands, matching the planning workbook convention.
+  parts.push(rect(margin, sprintY, leftWidth, sprintHeight, COLORS.white));
+  const sprintBands = list(schedule.sprints).length
+    ? schedule.sprints
+    : Array.from({ length: Math.ceil(periodCount / 2) }, (_, index) => ({ label: `Sprint ${index + 1}`, start: index * 2 + 1, end: Math.min(periodCount, index * 2 + 2) }));
+  for (const sprint of sprintBands) {
+    const x = timelineX + (sprint.start - 1) * periodWidth;
+    const bandWidth = (sprint.end - sprint.start + 1) * periodWidth;
+    parts.push(rect(x, sprintY, bandWidth, sprintHeight, '#F7E9C7'));
+    parts.push(text(x + bandWidth / 2, sprintY + 16, fitText(sprint.label, Math.max(7, Math.floor(bandWidth / 7))), { size: 8.5, weight: 700, anchor: 'middle' }));
+  }
+
+  let y = chartStart;
   let taskIndex = 0;
   for (const workstream of schedule.workstreams) {
     parts.push(rect(margin, y, width - margin * 2, groupHeight, COLORS.group));
-    parts.push(text(margin + 5, y + groupHeight * 0.68, workstream.name.toUpperCase(), { size: 11, weight: 800 }));
+    parts.push(text(margin + idWidth + 4, y + groupHeight * 0.68, fitText(workstream.name, 64), { size: 10.5, weight: 800 }));
     parts.push(line(margin, y + groupHeight, width - margin, y + groupHeight, { stroke: COLORS.grid, width: 0.8 }));
     y += groupHeight;
     for (const item of workstream.items) {
@@ -239,8 +266,20 @@ export function buildGanttSvg(schedule, context = {}) {
       }
       const codeColor = item.critical ? COLORS.red : COLORS.muted;
       const codePrefix = item.critical ? '● ' : '';
-      parts.push(text(margin + 18, y + itemHeight * 0.67, `${codePrefix}${item.id}`, { size: 9.5, fill: codeColor }));
-      parts.push(text(margin + codeWidth + 6, y + itemHeight * 0.67, fitText(item.name, 68), { size: 10.5 }));
+      const startLabel = item.startLabel || schedule.periods[item.start - 1]?.label || item.start;
+      const endLabel = item.endLabel || schedule.periods[item.end - 1]?.label || item.end;
+      const cells = [
+        [`${codePrefix}${item.id}`, margin + 5, idWidth - 8, codeColor, 'start'],
+        [item.phase || '', margin + idWidth + phaseWidth / 2, phaseWidth - 8, COLORS.ink || COLORS.navy, 'middle'],
+        [item.name, margin + idWidth + phaseWidth + 5, taskWidth - 8, COLORS.navy, 'start'],
+        [item.owner || '', margin + idWidth + phaseWidth + taskWidth + 5, ownerWidth - 8, COLORS.navy, 'start'],
+        [startLabel, margin + idWidth + phaseWidth + taskWidth + ownerWidth + startWidth / 2, startWidth - 6, COLORS.navy, 'middle'],
+        [endLabel, margin + leftWidth - endWidth / 2, endWidth - 6, COLORS.navy, 'middle']
+      ];
+      for (const [value, cellX, cellWidth, fill, anchor] of cells) {
+        const maxChars = Math.max(4, Math.floor(cellWidth / 6.4));
+        parts.push(text(cellX, y + itemHeight * 0.67, fitText(value, maxChars), { size: 9.1, fill, anchor }));
+      }
       const barX = timelineX + (item.start - 1) * periodWidth + 1;
       const barWidth = (item.end - item.start + 1) * periodWidth - 2;
       const barY = y + itemHeight * 0.19;
@@ -254,6 +293,12 @@ export function buildGanttSvg(schedule, context = {}) {
     }
   }
 
+  let gridX = margin;
+  for (const [, columnWidth] of leftColumns) {
+    parts.push(line(gridX, headerY, gridX, actualBottom, { stroke: COLORS.grid, width: 0.65 }));
+    gridX += columnWidth;
+  }
+  parts.push(line(timelineX, headerY, timelineX, actualBottom, { stroke: COLORS.grid, width: 0.9 }));
   for (let index = 0; index <= periodCount; index += 1) {
     const x = timelineX + index * periodWidth;
     parts.push(line(x, headerY, x, actualBottom, { stroke: COLORS.grid, width: 0.65 }));
@@ -261,13 +306,14 @@ export function buildGanttSvg(schedule, context = {}) {
   // Redraw overlay rules so they remain visible over bars.
   for (const milestone of list(schedule.milestones)) {
     const x = timelineX + milestone.period * periodWidth;
-    parts.push(line(x, markerY + 20, x, actualBottom, { stroke: COLORS.gold, width: 1.5, dash: '7 6' }));
+    parts.push(line(x, markerY + 16, x, actualBottom, { stroke: COLORS.gold, width: 1.4, dash: '6 5' }));
   }
-  parts.push(line(currentX, markerY + 20, currentX, actualBottom, { stroke: COLORS.red, width: 3 }));
+  parts.push(line(currentX, markerY + 18, currentX, actualBottom, { stroke: COLORS.red, width: 3 }));
 
   const source = schedule.source || context.source || '';
   const note = schedule.note || 'Bars show planned timing; milestone and current-date lines are drawn from the approved baseline and reporting cutoff.';
-  parts.push(text(margin, actualBottom + 22, fitText(note, 205), { size: 9.5, weight: 600 }));
+  parts.push(statusLegend(margin, actualBottom + 12, 650, 23));
+  parts.push(text(margin, actualBottom + 54, fitText(note, 215), { size: 8.8, weight: 600 }));
   if (source) parts.push(text(margin, sourceY, fitText(`Source: ${source}`, 225), { size: 8.5, fill: COLORS.muted }));
   parts.push(text(width - margin, sourceY, 'A3 landscape', { size: 8.5, fill: COLORS.muted, anchor: 'end' }));
   parts.push('</svg>');
