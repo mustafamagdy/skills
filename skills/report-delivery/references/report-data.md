@@ -89,15 +89,15 @@ Paths are resolved relative to the JSON file. Local images are embedded into the
 
 Tone values are `green`, `amber`, `red`, `blue`, or `neutral`. Unknown values render as neutral.
 
-## Optional A3 project-plan Gantt
+## Standard A3 project-plan Gantt
 
-Add a top-level `schedule` object when the report needs a one-page project plan with phase bands, task-level bars, milestone lines and a current-date line. Read [a3-gantt.md](a3-gantt.md) for the complete contract and validation rules.
+Add a top-level `schedule` object by default for delivery reports when an approved schedule exists. It produces a one-page project plan with phase bands, task-level bars, milestone lines and a current-date line. Read [a3-gantt.md](a3-gantt.md) for the complete contract and validation rules.
 
 The report builder then creates an additional standalone SVG and appends it as an A3 landscape page in HTML/PDF and FODT/DOCX. Keep the chart at the end of the report so the A4 body is unaffected.
 
-## Optional A3 sprint delivery log
+## Standard A3 sprint delivery log
 
-Add a top-level `sprintLog` object when the report needs story-level sprint detail. Read [sprint-log.md](sprint-log.md) for the data contract and validation rules.
+Add a top-level `sprintLog` object by default for delivery reports when sprint tracker data exists. Read [sprint-log.md](sprint-log.md) for the data contract and validation rules.
 
 The builder writes a second standalone SVG and appends it as an A3 landscape page after the Gantt. The log uses full-width sprint bands and columns for Sprint, Module, User Story or Task, Priority, Story Points, Assignee, Status and Notes.
 

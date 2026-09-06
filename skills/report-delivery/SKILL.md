@@ -69,12 +69,14 @@ Choose only sections that help the named audience. A useful default for a client
 6. Next-period plan
 7. Risks, dependencies, decisions and owners
 8. Evidence register
-9. A3 project-plan Gantt when the plan position materially helps the audience
-10. A3 sprint delivery log when story-level sprint detail helps the meeting
+9. A3 project-plan Gantt when approved schedule data exists
+10. A3 sprint delivery log when sprint tracker data exists
 
 For an internal report, add delivery causes, operational detail and corrective actions. For a client-facing report, remove internal chatter, blame, unsupported speculation and implementation notes, but never hide a material delivery risk or misstate progress.
 
 Lead with outcomes. Story lists and evidence tables support the report; they do not replace the summary.
+
+For weekly status, sprint review, milestone review and steering reports, include both A3 appendices by default when their source data exists. Omit one only when the user asks for a shorter report, the report type makes it irrelevant, or the required evidence is unavailable. Name the missing evidence rather than fabricating a page.
 
 ## Evidence rules
 
@@ -116,9 +118,9 @@ For paged documents:
 
 The report body belongs in the file. In the terminal, report the files written, the evidence cutoff, the few decisions or gaps that need attention, and nothing else.
 
-## Add an A3 project-plan Gantt
+## Add the standard A3 project-plan Gantt
 
-When the user asks to show the project plan, timeline, delivery path, milestones or current position, add a task-level Gantt rather than a decorative sprint-block chart. Read [references/a3-gantt.md](references/a3-gantt.md) and populate the optional top-level `schedule` object in the report JSON.
+For a delivery report with an approved plan, add a task-level Gantt rather than a decorative sprint-block chart. This is the default when the skill is invoked for a weekly status, sprint review, milestone review or steering report. Also add it whenever the user asks to show the project plan, timeline, delivery path, milestones or current position. Read [references/a3-gantt.md](references/a3-gantt.md) and populate the top-level `schedule` object in the report JSON.
 
 The page must be reusable across projects:
 
@@ -134,9 +136,9 @@ The page must be reusable across projects:
 
 If the plan has more than 26 periods or 32 task rows, split the plan or add a second detailed appendix. Do not shrink the chart into unreadable text. If a converter does not preserve mixed page sizes, use an available document tool to place the generated SVG in a true A3 landscape section and verify the result.
 
-## Add an A3 sprint delivery log
+## Add the standard A3 sprint delivery log
 
-When the user asks for a sprint log, backlog by sprint, story appendix or detailed sprint position, populate the optional top-level `sprintLog` object in the report JSON. Read [references/sprint-log.md](references/sprint-log.md).
+For a delivery report backed by a sprint tracker, add the sprint delivery log by default. Also add it whenever the user asks for a sprint log, backlog by sprint, story appendix or detailed sprint position. Read [references/sprint-log.md](references/sprint-log.md) and populate the top-level `sprintLog` object in the report JSON.
 
 The page follows a practical spreadsheet planning convention: a dark navy column header, one full-width navy band per sprint, compact alternating story rows, and priority and status colours. Show the fields the tracker can support: Sprint, Module, User Story or Task, Priority, Story Points, Assignee, Status and Notes. Do not invent missing values.
 

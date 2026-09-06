@@ -1,6 +1,6 @@
 # A3 sprint delivery log
 
-Use this optional report component when the audience needs story-level sprint detail in a compact meeting appendix.
+Use this standard report appendix when sprint tracker data exists and the audience needs story-level delivery detail. Weekly status, sprint review, milestone review and steering reports include it by default unless the user asks for a shorter report.
 
 ## Data contract
 
@@ -41,6 +41,7 @@ Add `sprintLog` at the top level of the report JSON:
 
 ## Rules
 
+- Follow a professional spreadsheet backlog style: one compact table, navy column header, full-width navy sprint group bands, alternating neutral rows, readable grid lines, and restrained status colours.
 - Use tracker values at the report cutoff. Do not turn planned owners or estimated points into actual tracker values.
 - Keep tracker state names unchanged unless the report defines an explicit mapping.
 - Use one full-width band per sprint.

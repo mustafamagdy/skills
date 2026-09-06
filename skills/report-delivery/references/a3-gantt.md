@@ -1,6 +1,6 @@
 # A3 project-plan Gantt
 
-Use this optional report component when the audience needs to see the approved plan, the current position and the remaining route to delivery on one page.
+Use this standard report appendix when an approved plan exists and the audience needs to see the baseline, current position and remaining route to delivery on one page. Weekly status, sprint review, milestone review and steering reports include it by default unless the user asks for a shorter report.
 
 The chart is source-backed. Read the approved baseline for planned timing and live delivery evidence for status. Do not silently calculate a new baseline or move a milestone to make the chart look cleaner.
 
@@ -88,6 +88,7 @@ The Gantt is appended at the end so the report can switch to A3 without disturbi
 
 ## Design rules
 
+- Treat the page as a professional planning worksheet: centered title and subtitle, restrained navy headers, light phase or workstream bands, compact weekly cells, and precise grid alignment.
 - Make the deliverable column materially wider than one period cell.
 - Keep every period cell equal in width.
 - Use phase bands across the top, a compact sprint band below the week header and group headers down the left.
