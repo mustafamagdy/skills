@@ -19,7 +19,7 @@ Distinguish completed development from shipped work when the workflow does. Neve
 
 ## Build the overview
 
-Use a short project title and compact visual hierarchy: colored totals first, two useful trends next, then quality and activity. Prefer six to ten readable panels over a wall of tiny widgets. Keep colors consistent, pair color with labels, and make the main signals visible without excessive scrolling.
+Adapt the layout to the native surface first: GitHub uses linked Project views and Insights, not a widget canvas. Where a dashboard canvas exists, use a short project title and compact visual hierarchy: colored totals first, two useful trends next, then quality and activity. Prefer six to ten readable panels over a wall of tiny widgets. Keep colors consistent, pair color with labels, and make the main signals visible without excessive scrolling.
 
 Choose panels supported by real data:
 
@@ -32,7 +32,7 @@ Choose panels supported by real data:
 | Build health | Recent runs of the relevant active pipeline |
 | Code activity | Recent commits and open PRs, plus links to the board, repository, and CI |
 
-At initiation, history may be empty. Show truthful empty states or omit unavailable trends and record why. Zero means a successful query returned no matches; unavailable data is not zero. Do not forecast delivery from no history.
+At initiation, history may be empty. An empty project overview with scoped saved views is valid; omit iteration and estimate-dependent charts when those fields or data do not exist. Do not create synthetic work items or change planning fields just to populate charts. Show truthful empty states or omit unavailable trends and record why. Zero means a successful query returned no matches; unavailable data is not zero. Do not forecast delivery from no history.
 
 Use native saved views, queries, charts, and dashboard widgets first. If the platform has no single dashboard surface, use a small set of linked native views. Do not silently substitute a custom website. Annual contribution heatmaps are optional: add one only when already available and useful. If it needs an extension, payment, or custom development, explain that briefly and skip unless the user asks to pursue it. Commit volume is activity, not productivity or a basis for ranking people.
 

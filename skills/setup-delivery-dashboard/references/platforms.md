@@ -6,7 +6,7 @@ Verify current capabilities, plan limits, installed widgets, and permissions bef
 
 Prefer `az boards` for source queries and `az devops invoke` for dashboard operations not covered by a dedicated command. Confirm organization, project, and team explicitly rather than trusting CLI defaults. Use native Query Tile counters, Sprint Burndown, Velocity, Code Tile, Build History, and Markdown links where available.
 
-Team area filters can omit nested work even when project-wide queries find it. Check the intended area scope and iteration configuration before diagnosing empty analytics. Do not silently broaden a team chart to the entire project. Resolved can mean development complete while Closed means shipped; configure analytics and label totals according to the actual workflow.
+Team area filters can omit nested work even when project-wide queries find it. Check the intended area scope and iteration configuration before diagnosing empty analytics. Native sprint and velocity reports inherit team configuration and may not accept an arbitrary query filter. Use scoped saved queries and Query Tiles for totals; label native reports with their actual team scope, and omit them if that scope does not match the intended audience. Do not silently broaden a team chart to the entire project. Resolved can mean development complete while Closed means shipped; configure analytics and label totals according to the actual workflow.
 
 Practical API lessons:
 
