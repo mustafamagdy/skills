@@ -102,4 +102,6 @@ Report the round trip as one line per operation: the operation, pass or fail, an
 
 Both files are written. Close with the two paths and one line: read them there, correct them in place, no need to re-run this skill for an edit.
 
+For project initiation, include native progress visibility in the handoff. When the user has authorized dashboard creation as part of setup, call the Skill tool with `setup-delivery-dashboard` after tracker verification. Otherwise name `/setup-delivery-dashboard` as the next setup option. It records live dashboard links in `docs/delivery/dashboard.md`; missing delivery history is an honest empty state, not a blocker.
+
 Then tell the user: **`/ingest-requirements`** next, with the paths to the source documents.

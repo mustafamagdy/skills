@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Delivery Dashboard"
+  short_description: "Create native project progress dashboards"
+  default_prompt: "Use $setup-delivery-dashboard to create a concise native delivery dashboard as part of this project's initiation."

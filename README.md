@@ -16,6 +16,9 @@ requirements docs
    ├─ /plan-release .......... edges + estimates → the route and the cadence
    └─ /plan-sprint ........... the route → one sprint, committed
 
+project visibility
+   └─ /setup-delivery-dashboard ... initiation → live progress, pace and quality views
+
 delivery evidence
    └─ /report-delivery ....... any point → a client, sprint, milestone or executive report
 ```
@@ -38,13 +41,16 @@ delivery evidence
 
 **Model-invoked**
 
+Project initiation includes dashboard setup when requested as part of the setup scope.
+
 | Skill | What it does |
 |---|---|
+| [`setup-delivery-dashboard`](skills/setup-delivery-dashboard/SKILL.md) | Create native progress, pace, quality and code activity views during project initiation |
 | [`backlog-audit`](skills/backlog-audit/SKILL.md) | Audit traceability, structure, readiness, graph, tags and schedule. Writes nothing. |
 
 ## Any tracker
 
-No skill here knows what Azure DevOps, GitHub Issues, Jira or a folder of markdown files is. They call **named operations** against a [capability contract](skills/setup-delivery/CAPABILITIES.md) that `/setup-delivery` answers once per repo, in `docs/agents/delivery-tracker.md`.
+The backlog planning steps stay independent of the tracker. The dashboard skill also includes platform guidance for Azure DevOps, GitHub Projects, Jira and native fallbacks. The planning steps call **named operations** against a [capability contract](skills/setup-delivery/CAPABILITIES.md) that `/setup-delivery` answers once per repo, in `docs/agents/delivery-tracker.md`.
 
 Ship-ready templates: [Azure DevOps](skills/setup-delivery/tracker-azure-devops.md), [GitHub Issues](skills/setup-delivery/tracker-github.md), [local markdown](skills/setup-delivery/tracker-local.md), and a [blank form](skills/setup-delivery/tracker-blank.md) for anything else.
 

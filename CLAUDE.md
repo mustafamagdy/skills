@@ -6,7 +6,7 @@ Every skill is either **user-invoked** (`disable-model-invocation: true` in the 
 
 Every chain step is user-invoked. That is a deliberate cost: the human is the index and has to remember the order, which is what `ask-delivery` and the closing **Hand off** section of each skill are for. The reason is that every step publishes to a real tracker a client can see, and a chain step firing on its own inference would publish three hundred work items nobody asked for.
 
-`backlog-audit` is the exception, and model-invoked because it writes nothing.
+`backlog-audit` is model-invoked because it writes nothing. `setup-delivery-dashboard` is also model-invoked so it can run during authorized project initiation; its scope is dashboard views and queries, not backlog or permission changes.
 
 Dependencies between skills are expressed as an instruction to **call the Skill tool** with the named skill, never as a `../other-skill/FILE.md` cross-reference. This only works for model-invoked skills; where a step's precondition is a user-invoked skill, tell the human to run it.
 
