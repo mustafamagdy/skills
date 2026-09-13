@@ -1,6 +1,6 @@
 interface:
   display_name: "Report Delivery"
   short_description: "Create evidence-backed delivery reports"
-  default_prompt: "Use $report-delivery to create a polished delivery report for this reporting period."
+  default_prompt: "Use $report-delivery to create a polished delivery report for this reporting period, including the standard source-backed A3 Gantt and sprint delivery log when the evidence exists."
 policy:
   allow_implicit_invocation: false

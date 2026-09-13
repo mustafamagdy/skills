@@ -118,6 +118,54 @@
     "note": "Bars show approved timing; milestone and status lines show the delivery position.",
     "source": "Approved delivery plan and current tracker state"
   },
+  "sprintLog": {
+    "title": "Example project - Sprint Delivery Log",
+    "subtitle": "Reporting sprint and next sprint | Status as at 3 September 2026",
+    "statusDate": "2026-09-03",
+    "sprints": [
+      {
+        "name": "Sprint 3",
+        "label": "Foundation",
+        "shortName": "S3",
+        "startDate": "23 Aug",
+        "endDate": "5 Sep 2026",
+        "items": [
+          {
+            "id": "S1",
+            "sprint": "S3",
+            "module": "Platform",
+            "name": "Provision the delivery environment",
+            "priority": "High",
+            "points": 8,
+            "assignee": "Delivery team",
+            "status": "Closed",
+            "notes": "M2"
+          }
+        ]
+      },
+      {
+        "name": "Sprint 4",
+        "label": "Core workflow",
+        "shortName": "S4",
+        "startDate": "6 Sep",
+        "endDate": "19 Sep 2026",
+        "items": [
+          {
+            "id": "S2",
+            "sprint": "S4",
+            "module": "Transactions",
+            "name": "Complete the first end-to-end user outcome",
+            "priority": "High",
+            "points": 5,
+            "assignee": "Delivery team",
+            "status": "Active",
+            "notes": "M3"
+          }
+        ]
+      }
+    ],
+    "source": "Current tracker snapshot"
+  },
   "risks": [
     {
       "rating": "Amber",
